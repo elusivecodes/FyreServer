@@ -213,7 +213,7 @@ Set the current locale.
 $request->setLocale($locale);
 ```
 
-The locale must be present in the `supportedLocales` property of the *Request* `$options` parameter, or the default locale will be used.
+The locale must be present in the `supportedLocales` property of the *ServerRequest* `$options` parameter, or the default locale will be used.
 
 
 ## Client Responses
