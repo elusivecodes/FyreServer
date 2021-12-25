@@ -43,7 +43,7 @@ $request = new ServerRequest($config);
 
 **Get Cookie**
 
-Get a value from $_COOKIE array.
+Get a value from the `$_COOKIE` array.
 
 - `$key` is a string representing the array key using "dot" notation.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
@@ -51,6 +51,12 @@ Get a value from $_COOKIE array.
 
 ```php
 $value = $request->getCookie($key, $filter, $options);
+```
+
+If the `$key` argument is omitted, this method will return an array containing all values.
+
+```php
+$values = $request->getCookie();
 ```
 
 **Get Default Locale**
@@ -63,7 +69,7 @@ $defaultLocale = $request->getDefaultLocale();
 
 **Get Environment**
 
-Get a value from $_ENV array.
+Get a value from the `$_ENV` array.
 
 - `$key` is a string representing the array key.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
@@ -75,7 +81,7 @@ $value = $request->getEnv($key, $filter, $options);
 
 **Get File**
 
-Get an *UploadedFile* or array of files from $_FILE array.
+Get an *UploadedFile* or array of files from the `$_FILE` array.
 
 - `$key` is a string representing the array key using "dot" notation.
 
@@ -83,9 +89,15 @@ Get an *UploadedFile* or array of files from $_FILE array.
 $file = $request->getFile($key);
 ```
 
+If the `$key` argument is omitted, this method will return an array containing all files.
+
+```php
+$files = $request->getFile();
+```
+
 **Get Get**
 
-Get a value from $_GET array.
+Get a value from the `$_GET` array.
 
 - `$key` is a string representing the array key using "dot" notation.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
@@ -93,6 +105,12 @@ Get a value from $_GET array.
 
 ```php
 $value = $request->getGet($key, $filter, $options);
+```
+
+If the `$key` argument is omitted, this method will return an array containing all values.
+
+```php
+$values = $request->getGet();
 ```
 
 **Get Locale**
@@ -105,7 +123,7 @@ $locale = $request->getLocale();
 
 **Get Post**
 
-Get a value from $_POST array.
+Get a value from the `$_POST` array.
 
 - `$key` is a string representing the array key using "dot" notation.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
@@ -115,9 +133,15 @@ Get a value from $_POST array.
 $value = $request->getPost($key, $filter, $options);
 ```
 
+If the `$key` argument is omitted, this method will return an array containing all values.
+
+```php
+$values = $request->getPost();
+```
+
 **Get Server**
 
-Get a value from $_SERVER array.
+Get a value from the `$_SERVER` array.
 
 - `$key` is a string representing the array key.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
@@ -125,6 +149,12 @@ Get a value from $_SERVER array.
 
 ```php
 $value = $request->getServer($key, $filter, $options);
+```
+
+If the `$key` argument is omitted, this method will return an array containing all values.
+
+```php
+$values = $request->getServer();
 ```
 
 **Get User Agent**

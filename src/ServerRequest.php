@@ -74,7 +74,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Get a value from $_COOKIE array.
+     * Get a value from the $_COOKIE array.
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
@@ -94,7 +94,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Get a value from $_ENV array.
+     * Get a value from the $_ENV array.
      * @param string $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
@@ -111,7 +111,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Get an UploadedFile or array of files from $_FILE array.
+     * Get an UploadedFile or array of files from the $_FILE array.
      * @param string|null $key The key.
      */
     public function getFile(string|null $key = null)
@@ -120,7 +120,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Get a value from $_GET array.
+     * Get a value from the $_GET array.
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
@@ -140,7 +140,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Get a value from $_POST array.
+     * Get a value from the $_POST array.
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
@@ -151,7 +151,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Get a value from $_SERVER array.
+     * Get a value from the $_SERVER array.
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
@@ -364,7 +364,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Parse server data from $_SERVER data.
+     * Parse server data from the $_SERVER data.
      * @param array $data The $_SERVER data.
      */
     protected function parseServer(array $data): void
@@ -400,7 +400,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Populate headers from $_SERVER data.
+     * Populate headers from the $_SERVER data.
      * @param array $data The $_SERVER data.
      */
     protected function populateHeaders(array $data): void
