@@ -1,0 +1,35 @@
+{
+    "name": "fyre/server",
+    "description": "A HTTP server request/response library.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "elusivecodes",
+            "email": "elusivecodes@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Fyre\\Server\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "fyre/cookie": "^1.0",
+        "fyre/filesystem": "^1.0",
+        "fyre/negotiate": "^1.0",
+        "fyre/request": "^1.0",
+        "fyre/response": "^1.0",
+        "fyre/uri": "^1.0",
+        "fyre/useragent": "^1.0"
+    },
+    "require-dev": {
+        "fyre/datetime": "^1.0",
+        "phpunit/phpunit": "^9"
+    }
+}
