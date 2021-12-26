@@ -6,6 +6,9 @@ namespace Fyre\Server\Exceptions;
 use
     RuntimeException;
 
+/**
+ * ServerException
+ */
 class ServerException extends RuntimeException
 {
 
