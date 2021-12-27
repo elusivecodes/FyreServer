@@ -254,16 +254,16 @@
         },
         {
             "name": "fyre/request",
-            "version": "v1.0.7",
+            "version": "v1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elusivecodes/FyreRequest.git",
-                "reference": "872476c3221ad0474d8f2c59e75cabecb4fc3a38"
+                "reference": "a34d46792338016b801cbbae55aa6111a582a514"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elusivecodes/FyreRequest/zipball/872476c3221ad0474d8f2c59e75cabecb4fc3a38",
-                "reference": "872476c3221ad0474d8f2c59e75cabecb4fc3a38",
+                "url": "https://api.github.com/repos/elusivecodes/FyreRequest/zipball/a34d46792338016b801cbbae55aa6111a582a514",
+                "reference": "a34d46792338016b801cbbae55aa6111a582a514",
                 "shasum": ""
             },
             "require": {
@@ -293,22 +293,22 @@
             "description": "A HTTP request library.",
             "support": {
                 "issues": "https://github.com/elusivecodes/FyreRequest/issues",
-                "source": "https://github.com/elusivecodes/FyreRequest/tree/v1.0.7"
+                "source": "https://github.com/elusivecodes/FyreRequest/tree/v1.0.8"
             },
-            "time": "2021-12-27T05:47:43+00:00"
+            "time": "2021-12-27T05:56:31+00:00"
         },
         {
             "name": "fyre/response",
-            "version": "v1.0.7",
+            "version": "v1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elusivecodes/FyreResponse.git",
-                "reference": "944b0aadb5c143e1a69dbfec7c4982a1883027d0"
+                "reference": "ea46c8fcf95719655fdebf5ba5849564f5ad451c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elusivecodes/FyreResponse/zipball/944b0aadb5c143e1a69dbfec7c4982a1883027d0",
-                "reference": "944b0aadb5c143e1a69dbfec7c4982a1883027d0",
+                "url": "https://api.github.com/repos/elusivecodes/FyreResponse/zipball/ea46c8fcf95719655fdebf5ba5849564f5ad451c",
+                "reference": "ea46c8fcf95719655fdebf5ba5849564f5ad451c",
                 "shasum": ""
             },
             "require": {
@@ -337,9 +337,9 @@
             "description": "A HTTP response library.",
             "support": {
                 "issues": "https://github.com/elusivecodes/FyreResponse/issues",
-                "source": "https://github.com/elusivecodes/FyreResponse/tree/v1.0.7"
+                "source": "https://github.com/elusivecodes/FyreResponse/tree/v1.0.8"
             },
-            "time": "2021-12-27T05:48:33+00:00"
+            "time": "2021-12-27T05:57:10+00:00"
         },
         {
             "name": "fyre/uri",
