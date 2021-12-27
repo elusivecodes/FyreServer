@@ -106,7 +106,7 @@ final class ServerRequestTest extends TestCase
         );
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         Locale::setDefault('en');
 

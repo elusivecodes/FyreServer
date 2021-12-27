@@ -82,7 +82,7 @@ final class ClientResponseTest extends TestCase
         );
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         CookieStore::clear();
 
