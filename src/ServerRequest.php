@@ -34,7 +34,7 @@ use function
     is_string,
     parse_url,
     str_replace,
-    strpos,
+    str_starts_with,
     strtolower,
     substr,
     ucwords;
@@ -412,7 +412,7 @@ class ServerRequest extends Request
         }
 
         foreach ($data AS $key => $value) {
-            if (strpos($key, 'HTTP_') !== 0) {
+            if (!str_starts_with($key, 'HTTP_')) {
                 continue;
             }
 
