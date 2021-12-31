@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\ClientResponse;
+namespace Tests;
 
 use
     Fyre\FileSystem\File,
