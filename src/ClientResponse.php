@@ -47,7 +47,7 @@ class ClientResponse extends Response
      * @param array $options The cookie options.
      * @return ClientResponse The ClientResponse.
      */
-    public function deleteCookie(string $name, array $options = []): self
+    public function deleteCookie(string $name, array $options = []): static
     {
         CookieStore::delete($name, $options);
 
@@ -78,7 +78,7 @@ class ClientResponse extends Response
      * Set headers to prevent browser caching.
      * @return ClientResponse The ClientResponse.
      */
-    public function noCache(): self
+    public function noCache(): static
     {
         $this->setHeader('Cache-Control', ['no-store', 'max-age=0', 'no-cache']);
 
@@ -91,7 +91,7 @@ class ClientResponse extends Response
      * @param int $code The header status code.
      * @return ClientResponse The ClientResponse.
      */
-    public function redirect(string $uri, int $code = 302): self
+    public function redirect(string $uri, int $code = 302): static
     {
         if (array_key_exists('REQUEST_METHOD', $_SERVER) && $this->getProtocolVersion() >= 1.1) {
             if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
@@ -135,7 +135,7 @@ class ClientResponse extends Response
      * @param string $charset The character set.
      * @return ClientResponse The ClientResponse.
      */
-    public function setContentType(string $mimeType, string $charset = 'UTF-8'): self
+    public function setContentType(string $mimeType, string $charset = 'UTF-8'): static
     {
         $this->setHeader('Content-Type', $mimeType.'; charset='.$charset);
 
@@ -149,7 +149,7 @@ class ClientResponse extends Response
      * @param array $options The cookie options.
      * @return ClientResponse The ClientResponse.
      */
-    public function setCookie(string $name, string $value, array $options = []): self
+    public function setCookie(string $name, string $value, array $options = []): static
     {
         if (array_key_exists('expires', $options)) {
             $options['expires'] += time();
@@ -165,7 +165,7 @@ class ClientResponse extends Response
      * @param DateTimeInterface|\DateTimeInterface|string|int $date The date.
      * @return ClientResponse The ClientResponse.
      */
-    public function setDate(DateTimeInterface|\DateTimeInterface|string|int $date): self
+    public function setDate(DateTimeInterface|\DateTimeInterface|string|int $date): static
     {
         $utcString = static::formatDateUTC($date);
 
@@ -179,7 +179,7 @@ class ClientResponse extends Response
      * @param mixed $data The data to send.
      * @return ClientResponse The ClientResponse.
      */
-    public function setJson($data): self
+    public function setJson($data): static
     {
         $this->setContentType('application/json');
 
@@ -193,7 +193,7 @@ class ClientResponse extends Response
      * @param DateTimeInterface|\DateTimeInterface|string|int $date The date.
      * @return ClientResponse The ClientResponse.
      */
-    public function setLastModified(DateTimeInterface|\DateTimeInterface|string|int $date): self
+    public function setLastModified(DateTimeInterface|\DateTimeInterface|string|int $date): static
     {
         $utcString = static::formatDateUTC($date);
 
@@ -207,7 +207,7 @@ class ClientResponse extends Response
      * @param SimpleXMLElement $data The data to send.
      * @return ClientResponse The ClientResponse.
      */
-    public function setXml(SimpleXMLElement $data): self
+    public function setXml(SimpleXMLElement $data): static
     {
         $this->setContentType('application/xml');
 

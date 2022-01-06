@@ -247,7 +247,7 @@ class ServerRequest extends Request
      * @param array $data The data.
      * @return ServerRequest The ServerRequest.
      */
-    public function setGlobals(string $type, array $data): self
+    public function setGlobals(string $type, array $data): static
     {
         if ($type === 'file') {
             $data = static::normalizeFiles($data);
@@ -270,7 +270,7 @@ class ServerRequest extends Request
      * @param string $locale The locale.
      * @return ServerRequest The ServerRequest.
      */
-    public function setLocale(string $locale): self
+    public function setLocale(string $locale): static
     {
         if (!in_array($locale, $this->supportedLocales, true)) {
             $locale = $this->defaultLocale;

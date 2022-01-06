@@ -12,17 +12,17 @@ use
 class ServerException extends RuntimeException
 {
 
-    public static function forInvalidNegotiationType(string $type): self
+    public static function forInvalidNegotiationType(string $type): static
     {
         return new static('Invalid negotation type: '.$type);
     }
 
-    public static function forUploadAlreadyMoved(string $filename): self
+    public static function forUploadAlreadyMoved(string $filename): static
     {
         return new static('Upload already moved: '.$filename);
     }
 
-    public static function forUploadInvalid(string $filename): self
+    public static function forUploadInvalid(string $filename): static
     {
         return new static('Upload is not valid: '.$filename);
     }
