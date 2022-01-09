@@ -36,8 +36,7 @@ final class ServerRequestTest extends TestCase
 
     public function testIsAjax(): void
     {
-        $this->assertEquals(
-            false,
+        $this->assertFalse(
             $this->request->isAjax()
         );
     }
@@ -48,24 +47,21 @@ final class ServerRequestTest extends TestCase
             'HTTP_X_REQUESTED_WITH' => 'XmlHttpRequest'
         ]);
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $this->request->isAjax()
         );
     }
 
     public function testIsCli(): void
     {
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $this->request->isCli()
         );
     }
 
     public function testIsSecure(): void
     {
-        $this->assertEquals(
-            false,
+        $this->assertFalse(
             $this->request->isSecure()
         );
     }
@@ -76,8 +72,7 @@ final class ServerRequestTest extends TestCase
             'HTTPS' => 'ON'
         ]);
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $this->request->isSecure()
         );
     }
@@ -88,8 +83,7 @@ final class ServerRequestTest extends TestCase
             'HTTP_X_FORWARDED_PROTO' => 'https'
         ]);
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $this->request->isSecure()
         );
     }
@@ -100,8 +94,7 @@ final class ServerRequestTest extends TestCase
             'HTTP_FRONT_END_HTTPS' => 'ON'
         ]);
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $this->request->isSecure()
         );
     }

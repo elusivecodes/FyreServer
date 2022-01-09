@@ -15,7 +15,7 @@ trait GetTest
             'test' => 'value'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'value',
             $this->request->getGet('test')
         );
@@ -29,7 +29,7 @@ trait GetTest
             ]
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'value',
             $this->request->getGet('test.a')
         );
@@ -43,7 +43,7 @@ trait GetTest
             ]
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'a' => 'value'
             ],
@@ -57,7 +57,7 @@ trait GetTest
             'test' => 'value'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             '',
             $this->request->getGet('test', FILTER_VALIDATE_EMAIL)
         );
@@ -77,8 +77,7 @@ trait GetTest
 
     public function testGetGetInvalid(): void
     {
-        $this->assertEquals(
-            null,
+        $this->assertNull(
             $this->request->getGet('invalid')
         );
     }

@@ -15,7 +15,7 @@ trait ServerTest
             'test' => 'value'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'value',
             $this->request->getServer('test')
         );
@@ -27,7 +27,7 @@ trait ServerTest
             'test' => 'value'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             '',
             $this->request->getServer('test', FILTER_VALIDATE_EMAIL)
         );
@@ -47,8 +47,7 @@ trait ServerTest
 
     public function testGetServerInvalid(): void
     {
-        $this->assertEquals(
-            null,
+        $this->assertNull(
             $this->request->getServer('invalid')
         );
     }
@@ -59,7 +58,7 @@ trait ServerTest
             'CONTENT_TYPE' => 'application/json'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'application/json',
             $this->request->getHeaderValue('Content-Type')
         );
@@ -71,7 +70,7 @@ trait ServerTest
             'REQUEST_METHOD' => 'POST'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'post',
             $this->request->getMethod()
         );

@@ -11,7 +11,7 @@ trait LocaleTest
 
     public function testGetDefaultLocale(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'en',
             $this->request->getDefaultLocale()
         );
@@ -19,7 +19,7 @@ trait LocaleTest
 
     public function testGetLocale(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'en-us',
             $this->request->getLocale()
         );
@@ -27,12 +27,12 @@ trait LocaleTest
 
     public function testSetLocale(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->request,
             $this->request->setLocale('en')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'en',
             $this->request->getLocale()
         );
@@ -42,7 +42,7 @@ trait LocaleTest
     {
         $this->request->setLocale('ru');
 
-        $this->assertEquals(
+        $this->assertSame(
             'en',
             $this->request->getLocale()
         );
@@ -53,7 +53,7 @@ trait LocaleTest
         $this->request->setLocale('en');
         $this->request->setLocale('en-us');
 
-        $this->assertEquals(
+        $this->assertSame(
             'en-us',
             Locale::getDefault()
         );

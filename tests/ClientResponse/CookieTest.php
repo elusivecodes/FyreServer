@@ -11,13 +11,12 @@ trait CookieTest
 
     public function testDeleteCookie(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->response,
             $this->response->deleteCookie('test')
         );
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $this->response->getCookie('test')->isExpired()
         );
     }
@@ -34,8 +33,7 @@ trait CookieTest
 
     public function testGetCookieInvalid(): void
     {
-        $this->assertEquals(
-            null,
+        $this->assertNull(
             $this->response->getCookie('invalid')
         );
     }
@@ -44,28 +42,26 @@ trait CookieTest
     {
         $this->response->setCookie('test', 'value');
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $this->response->hasCookie('test')
         );
     }
 
     public function testHasCookieInvalid(): void
     {
-        $this->assertEquals(
-            false,
+        $this->assertFalse(
             $this->response->hasCookie('invalid')
         );
     }
 
     public function testSetCookie(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->response,
             $this->response->setCookie('test', 'value')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'value',
             $this->response->getCookie('test')->getValue()
         );
@@ -75,7 +71,7 @@ trait CookieTest
     {
         $this->response->setCookie('test', 'value', ['domain' => 'test.com']);
 
-        $this->assertEquals(
+        $this->assertSame(
             'test.com',
             $this->response->getCookie('test')->getDomain()
         );
@@ -85,8 +81,7 @@ trait CookieTest
     {
         $this->response->setCookie('test', 'value', ['expires' => 60]);
 
-        $this->assertEquals(
-            false,
+        $this->assertFalse(
             $this->response->getCookie('test')->isExpired()
         );
     }

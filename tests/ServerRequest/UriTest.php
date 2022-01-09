@@ -19,7 +19,7 @@ trait UriTest
 
     public function testServerUri(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'https://test.com/',
             $this->request->getUri()->getUri()
         );
@@ -31,7 +31,7 @@ trait UriTest
             'REQUEST_URI' => '/test/path'
         ]);
     
-        $this->assertEquals(
+        $this->assertSame(
             '/test/path',
             $this->request->getUri()->getPath()
         );
@@ -43,10 +43,10 @@ trait UriTest
             'QUERY_STRING' => '?a=1&b=2'
         ]);
     
-        $this->assertEquals(
+        $this->assertSame(
             [
-                'a' => 1,
-                'b' => 2
+                'a' => '1',
+                'b' => '2'
             ],
             $this->request->getUri()->getQuery()
         );

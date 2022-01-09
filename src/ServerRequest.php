@@ -55,20 +55,20 @@ class ServerRequest extends Request
 
     /**
      * New ServerRequest constructor.
-     * @param array $config Options for the request.
+     * @param array $options Options for the request.
      */
-    public function __construct(array $config = [])
+    public function __construct(array $options = [])
     {
         parent::__construct();
 
         $this->userAgent = new UserAgent();
 
-        $this->uri->parseUri($config['baseUri'] ?? '');
+        $this->uri->parseUri($options['baseUri'] ?? '');
 
-        $this->body = $config['body'] ?? file_get_contents('php://input');
+        $this->body = $options['body'] ?? file_get_contents('php://input');
 
-        $this->defaultLocale = $config['defaultLocale'] ??  Locale::getDefault();
-        $this->supportedLocales = $config['supportedLocales'] ?? [];
+        $this->defaultLocale = $options['defaultLocale'] ??  Locale::getDefault();
+        $this->supportedLocales = $options['supportedLocales'] ?? [];
 
         $this->loadGlobals('server');
     }

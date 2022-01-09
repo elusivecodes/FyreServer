@@ -15,7 +15,7 @@ trait CookieTest
             'test' => 'value'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'value',
             $this->request->getCookie('test')
         );
@@ -27,7 +27,7 @@ trait CookieTest
             'test' => 'value'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             '',
             $this->request->getCookie('test', FILTER_VALIDATE_EMAIL)
         );
@@ -47,8 +47,7 @@ trait CookieTest
 
     public function testGetCookieInvalid(): void
     {
-        $this->assertEquals(
-            null,
+        $this->assertNull(
             $this->request->getCookie('invalid')
         );
     }

@@ -15,7 +15,7 @@ trait PostTest
             'test' => 'value'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'value',
             $this->request->getPost('test')
         );
@@ -29,7 +29,7 @@ trait PostTest
             ]
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'value',
             $this->request->getPost('test.a')
         );
@@ -43,7 +43,7 @@ trait PostTest
             ]
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'a' => 'value'
             ],
@@ -57,7 +57,7 @@ trait PostTest
             'test' => 'value'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             '',
             $this->request->getPost('test', FILTER_VALIDATE_EMAIL)
         );
@@ -77,8 +77,7 @@ trait PostTest
 
     public function testGetPostInvalid(): void
     {
-        $this->assertEquals(
-            null,
+        $this->assertNull(
             $this->request->getPost('invalid')
         );
     }

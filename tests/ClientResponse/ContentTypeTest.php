@@ -8,7 +8,7 @@ trait ContentTypeTest
 
     public function testContentType(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'text/html; charset=UTF-8',
             $this->response->getHeaderValue('Content-Type')
         );
@@ -16,12 +16,12 @@ trait ContentTypeTest
 
     public function testSetContentType(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->response,
             $this->response->setContentType('image/jpeg')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'image/jpeg; charset=UTF-8',
             $this->response->getHeaderValue('Content-Type')
         );
@@ -31,7 +31,7 @@ trait ContentTypeTest
     {
         $this->response->setContentType('image/jpeg', 'UTF-16');
 
-        $this->assertEquals(
+        $this->assertSame(
             'image/jpeg; charset=UTF-16',
             $this->response->getHeaderValue('Content-Type')
         );

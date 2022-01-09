@@ -34,7 +34,7 @@ final class UploadedFileTest extends TestCase
             'name' => 'test.txt'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'txt',
             $file->clientExtension()
         );
@@ -47,7 +47,7 @@ final class UploadedFileTest extends TestCase
             'name' => 'test.txt'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'test.txt',
             $file->clientName()
         );
@@ -60,7 +60,7 @@ final class UploadedFileTest extends TestCase
             'type' => 'text/plain'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'text/plain',
             $file->clientMimeType()
         );
@@ -73,7 +73,7 @@ final class UploadedFileTest extends TestCase
             'error' => UPLOAD_ERR_NO_FILE
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             UPLOAD_ERR_NO_FILE,
             $file->error()
         );
@@ -85,8 +85,7 @@ final class UploadedFileTest extends TestCase
             'tmp_name' => '/tmp/php1'
         ]);
 
-        $this->assertEquals(
-            false,
+        $this->assertFalse(
             $file->hasMoved()
         );
     }
@@ -97,8 +96,7 @@ final class UploadedFileTest extends TestCase
             'tmp_name' => '/tmp/php1'
         ]);
 
-        $this->assertEquals(
-            false,
+        $this->assertFalse(
             $file->isValid()
         );
     }

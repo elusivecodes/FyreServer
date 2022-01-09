@@ -15,7 +15,7 @@ trait NegotiateTest
             'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,/;q=0.8'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'text/html',
             $this->request->negotiate('content', ['application/xml', 'text/html'])
         );
@@ -27,7 +27,7 @@ trait NegotiateTest
             'HTTP_ACCEPT_ENCODING' => 'gzip,deflate'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'gzip',
             $this->request->negotiate('encoding', ['deflate', 'gzip'])
         );
@@ -39,7 +39,7 @@ trait NegotiateTest
             'HTTP_ACCEPT_LANGUAGE' => 'en-gb,en;q=0.5'
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'en-gb',
             $this->request->negotiate('language', ['en-gb'])
         );

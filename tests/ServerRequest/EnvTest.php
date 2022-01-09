@@ -16,7 +16,7 @@ trait EnvTest
     {
         putenv('test=value');
 
-        $this->assertEquals(
+        $this->assertSame(
             'value',
             $this->request->getEnv('test')
         );
@@ -26,7 +26,7 @@ trait EnvTest
     {
         putenv('value=test');
 
-        $this->assertEquals(
+        $this->assertSame(
             '',
             $this->request->getEnv('test', FILTER_VALIDATE_EMAIL)
         );
@@ -34,8 +34,7 @@ trait EnvTest
 
     public function testGetEnvInvalid(): void
     {
-        $this->assertEquals(
-            null,
+        $this->assertNull(
             $this->request->getEnv('invalid')
         );
     }

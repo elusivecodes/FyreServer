@@ -11,12 +11,12 @@ trait DateTest
 
     public function testSetDate(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->response,
             $this->response->setDate(0)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'Thu, 01-Jan-1970 00:00:00 UTC',
             $this->response->getHeaderValue('Date')
         );
@@ -28,7 +28,7 @@ trait DateTest
 
         $this->response->setDate($date);
 
-        $this->assertEquals(
+        $this->assertSame(
             'Thu, 01-Jan-1970 00:00:00 UTC',
             $this->response->getHeaderValue('Date')
         );
@@ -40,7 +40,7 @@ trait DateTest
 
         $this->response->setDate($date);
 
-        $this->assertEquals(
+        $this->assertSame(
             'Thu, 01-Jan-1970 00:00:00 UTC',
             $this->response->getHeaderValue('Date')
         );
@@ -48,12 +48,12 @@ trait DateTest
 
     public function testSetLastModified(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->response,
             $this->response->setLastModified(0)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'Thu, 01-Jan-1970 00:00:00 UTC',
             $this->response->getHeaderValue('Last-Modified')
         );
@@ -65,7 +65,7 @@ trait DateTest
 
         $this->response->setLastModified($date);
 
-        $this->assertEquals(
+        $this->assertSame(
             'Thu, 01-Jan-1970 00:00:00 UTC',
             $this->response->getHeaderValue('Last-Modified')
         );
@@ -77,7 +77,7 @@ trait DateTest
 
         $this->response->setLastModified($date);
 
-        $this->assertEquals(
+        $this->assertSame(
             'Thu, 01-Jan-1970 00:00:00 UTC',
             $this->response->getHeaderValue('Last-Modified')
         );

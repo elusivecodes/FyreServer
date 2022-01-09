@@ -8,17 +8,17 @@ trait RedirectTest
 
     public function testRedirect(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->response,
             $this->response->redirect('https://test.com/')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https://test.com/',
             $this->response->getHeaderValue('Location')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             302,
             $this->response->getStatusCode()
         );
@@ -28,7 +28,7 @@ trait RedirectTest
     {
         $this->response->redirect('https://test.com/', 301);
 
-        $this->assertEquals(
+        $this->assertSame(
             301,
             $this->response->getStatusCode()
         );

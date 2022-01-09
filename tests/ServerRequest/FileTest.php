@@ -26,22 +26,22 @@ trait FileTest
             $this->request->getFile('test')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '/tmp/tempname',
             $this->request->getFile('test')->path()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'test.txt',
             $this->request->getFile('test')->clientName()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'text/plain',
             $this->request->getFile('test')->clientMimeType()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             0,
             $this->request->getFile('test')->error()
         );
@@ -74,22 +74,22 @@ trait FileTest
             $this->request->getFile('test.a')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '/tmp/tempname',
             $this->request->getFile('test.a')->path()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'test.txt',
             $this->request->getFile('test.a')->clientName()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'text/plain',
             $this->request->getFile('test.a')->clientMimeType()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             0,
             $this->request->getFile('test.a')->error()
         );
@@ -160,8 +160,7 @@ trait FileTest
 
     public function testGetFileInvalid(): void
     {
-        $this->assertEquals(
-            null,
+        $this->assertNull(
             $this->request->getFile('invalid')
         );
     }

@@ -31,14 +31,14 @@ use Fyre\Server\ClientResponse;
 
 This class extends the [*Request*](https://github.com/elusivecodes/FyreRequest) class.
 
-- `$config` is an array containing configuration options.
+- `$options` is an array containing configuration options.
     - `baseUri` is a string representing the base URI to use.
     - `body` is a string representing the request body, and will default to the value of `php://input`.
     - `defaultLocale` is a string representing the default locale, and will default to the system default.
     - `supportedLocales` is an array containing the supported locales.
 
 ```php
-$request = new ServerRequest($config);
+$request = new ServerRequest($options);
 ```
 
 **Get Cookie**

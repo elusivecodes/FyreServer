@@ -34,7 +34,7 @@ final class ClientResponseTest extends TestCase
 
     public function testNoCache(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'no-store, max-age=0, no-cache',
             $this->response->getHeaderValue('Cache-Control')
         );
@@ -42,21 +42,21 @@ final class ClientResponseTest extends TestCase
 
     public function testSetJson(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->response,
             $this->response->setJson(['a' => 1])
         );
 
         $json = $this->response->getBody();
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'a' => 1
             ],
             json_decode($json, true)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'application/json; charset=UTF-8',
             $this->response->getHeaderValue('Content-Type')
         );
@@ -66,17 +66,17 @@ final class ClientResponseTest extends TestCase
     {
         $xml = new SimpleXMLElement('<books><book><title>Test</title></book></books>');
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->response,
             $this->response->setXml($xml)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $xml->asXML(),
             $this->response->getBody()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'application/xml; charset=UTF-8',
             $this->response->getHeaderValue('Content-Type')
         );
