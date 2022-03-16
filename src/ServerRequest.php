@@ -434,7 +434,7 @@ class ServerRequest extends Request
     protected static function buildFiles(array $files): array
     {
         return array_map(
-            function($data) {
+            function(array $data): UploadedFile|array {
                 if (!array_key_exists('tmp_name', $data)) {
                     return static::buildFiles($data);
                 }
@@ -456,7 +456,7 @@ class ServerRequest extends Request
     {
         if (is_array($value)) {
             return array_map(
-                fn($val) => static::filterVar($val, $filter, $options),
+                fn(mixed $val): string|array => static::filterVar($val, $filter, $options),
                 $value
             );
         }
