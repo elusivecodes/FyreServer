@@ -179,7 +179,7 @@ class ClientResponse extends Response
      * @param mixed $data The data to send.
      * @return ClientResponse The ClientResponse.
      */
-    public function setJson($data): static
+    public function setJson(mixed $data): static
     {
         $this->setContentType('application/json');
 
