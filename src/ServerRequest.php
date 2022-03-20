@@ -245,17 +245,22 @@ class ServerRequest extends Request
      * Set global data.
      * @param string $type The global type.
      * @param array $data The data.
+     * @param bool $overwrite Whether to overwrite the global data.
      * @return ServerRequest The ServerRequest.
      */
-    public function setGlobals(string $type, array $data): static
+    public function setGlobals(string $type, array $data, bool $overwrite = true): static
     {
         if ($type === 'file') {
             $data = static::normalizeFiles($data);
             $data = static::buildFiles($data);
         }
 
-        $this->globals[$type] ??= [];
-        $this->globals[$type] += $data;
+        if ($overwrite) {
+            $this->globals[$type] = $data;
+        } else {
+            $this->globals[$type] ??= [];
+            $this->globals[$type] += $data;
+        }
 
         if ($type === 'server') {
             $this->populateHeaders($data);
