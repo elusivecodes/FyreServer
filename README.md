@@ -47,7 +47,7 @@ Get a value from the `$_COOKIE` array.
 
 - `$key` is a string representing the array key using "dot" notation.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number o array containing flags to use when filtering, and will default to *0*.
+- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
 
 ```php
 $value = $request->getCookie($key, $filter, $options);
@@ -73,7 +73,7 @@ Get a value from the `$_ENV` array.
 
 - `$key` is a string representing the array key.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number o array containing flags to use when filtering, and will default to *0*.
+- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
 
 ```php
 $value = $request->getEnv($key, $filter, $options);
@@ -101,7 +101,7 @@ Get a value from the `$_GET` array.
 
 - `$key` is a string representing the array key using "dot" notation.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number o array containing flags to use when filtering, and will default to *0*.
+- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
 
 ```php
 $value = $request->getGet($key, $filter, $options);
@@ -127,7 +127,7 @@ Get a value from the `$_POST` array.
 
 - `$key` is a string representing the array key using "dot" notation.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number o array containing flags to use when filtering, and will default to *0*.
+- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
 
 ```php
 $value = $request->getPost($key, $filter, $options);
@@ -145,7 +145,7 @@ Get a value from the `$_SERVER` array.
 
 - `$key` is a string representing the array key.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number o array containing flags to use when filtering, and will default to *0*.
+- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
 
 ```php
 $value = $request->getServer($key, $filter, $options);
@@ -227,7 +227,12 @@ $response = new ClientResponse();
 **Delete Cookie**
 
 - `$name` is a string representing the cookie name.
-- `$name` is an array containing cookie options.
+- `$options` is an array containing cookie options.
+    - `domain` is a string representing the cookie domain, and will default to "".
+    - `path` is a string representing the cookie path, and will default to "*/*".
+    - `secure` is a boolean indicating whether to set a secure cookie, and will default to *false*.
+    - `httpOnly` is a boolean indicating whether to the cookie should be HTTP only, and will default to *false*.
+    - `sameSite` is a string representing the cookie same site, and will default to "*Lax*".
 
 ```php
 $response->deleteCookie($name, $options);
@@ -297,7 +302,13 @@ Set a cookie value.
 
 - `$name` is a string representing the cookie name.
 - `$value` is a string representing the cookie value.
-- `$name` is an array containing cookie options.
+- `$options` is an array containing cookie options.
+    - `expires` is a number representing the cookie lifetime, and will default to *0*.
+    - `domain` is a string representing the cookie domain, and will default to "".
+    - `path` is a string representing the cookie path, and will default to "*/*".
+    - `secure` is a boolean indicating whether to set a secure cookie, and will default to *false*.
+    - `httpOnly` is a boolean indicating whether to the cookie should be HTTP only, and will default to *false*.
+    - `sameSite` is a string representing the cookie same site, and will default to "*Lax*".
 
 ```php
 $response->setCookie($name, $value, $options);
