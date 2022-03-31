@@ -357,7 +357,7 @@ $response->setXml($data);
 
 ## Uploaded Files
 
-This class extends the [*File*](https://github.com/elusivecodes/FyreFileSystem) class.
+This class extends the [*File*](https://github.com/elusivecodes/FyreFileSystem#files) class.
 
 **Client Extension**
 
@@ -418,4 +418,4 @@ Move the uploaded file.
 $file = $uploadedFile->moveTo($destination, $name);
 ```
 
-This method will return a new [*File*](https://github.com/elusivecodes/FyreFileSystem) for the moved file.
+This method will return a new [*File*](https://github.com/elusivecodes/FyreFileSystem#files) for the moved file.
