@@ -9,7 +9,6 @@ use
     Fyre\Http\UserAgent,
     Fyre\Server\Exceptions\ServerException,
     Fyre\Server\UploadedFile,
-    Fyre\Uri\Uri,
     Locale,
     RecursiveArrayIterator,
     RecursiveIteratorIterator;

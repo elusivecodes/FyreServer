@@ -25,7 +25,6 @@
         "fyre/negotiate": "^1.0",
         "fyre/request": "^1.0",
         "fyre/response": "^1.0",
-        "fyre/uri": "^1.0",
         "fyre/useragent": "^1.0"
     },
     "require-dev": {
