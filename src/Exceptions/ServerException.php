@@ -17,6 +17,11 @@ class ServerException extends RuntimeException
         return new static('Invalid negotation type: '.$type);
     }
 
+    public static function forMissingFile(string $path): static
+    {
+        return new static('Download file does not exist: '.$path);
+    }
+
     public static function forUploadAlreadyMoved(string $filename): static
     {
         return new static('Upload already moved: '.$filename);

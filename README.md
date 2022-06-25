@@ -7,6 +7,7 @@
 - [Installation](#installation)
 - [Server Requests](#server-requests)
 - [Client Responses](#client-responses)
+- [Download Responses](#download-responses)
 - [Uploaded Files](#uploaded-files)
 
 
@@ -352,6 +353,37 @@ Set an XML response.
 
 ```php
 $response->setXml($data);
+```
+
+
+## Download Responses
+
+This class extends the [*ClientResponse*](#client-responses) class.
+
+- `$path` is a string representing the file path.
+- `$filename` is a string representing the download filename, and will default to the file name.
+- `$mimeType` is a string representing the MIME type, and will default to the file MIME type.
+
+```php
+$response = new DownloadResponse($path, $filename, $mimeType);
+```
+
+**From Binary**
+
+- `$data` is a string representing the file data.
+- `$filename` is a string representing the download filename.
+- `$mimeType` is a string representing the MIME type, and will default to the file MIME type.
+
+```php
+$response = DownloadResponse::fromBinary($data, $filename, $mimeType);
+```
+
+**Get File**
+
+Get the download [*File*](https://github.com/elusivecodes/FyreFileSystem#files).
+
+```php
+$file = $response->getFile();
 ```
 
 
