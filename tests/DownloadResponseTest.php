@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use
-    Fyre\Server\ClientResponse,
-    Fyre\Server\DownloadResponse,
-    Fyre\Server\Exceptions\ServerException,
-    PHPUnit\Framework\TestCase;
+use Fyre\Server\ClientResponse;
+use Fyre\Server\DownloadResponse;
+use Fyre\Server\Exceptions\ServerException;
+use PHPUnit\Framework\TestCase;
 
-use function
-    file_get_contents;
+use function file_get_contents;
 
 final class DownloadResponseTest extends TestCase
 {
@@ -63,7 +61,9 @@ final class DownloadResponseTest extends TestCase
 
     public function testFilename(): void
     {
-        $response = new DownloadResponse('tests/Mock/test.txt', 'file.txt');
+        $response = new DownloadResponse('tests/Mock/test.txt', [
+            'filename' => 'file.txt'
+        ]);
 
         $this->assertSame(
             'attachment; filename="file.txt"',
@@ -73,7 +73,9 @@ final class DownloadResponseTest extends TestCase
 
     public function testMimeType(): void
     {
-        $response = new DownloadResponse('tests/Mock/test.txt', null, 'application/octet-stream');
+        $response = new DownloadResponse('tests/Mock/test.txt', [
+            'mimeType' => 'application/octet-stream'
+        ]);
 
         $this->assertSame(
             'application/octet-stream; charset=UTF-8',
@@ -85,7 +87,9 @@ final class DownloadResponseTest extends TestCase
     {
         $data = file_get_contents('tests/Mock/test.txt');
 
-        $response = DownloadResponse::fromBinary($data, 'file.txt');
+        $response = DownloadResponse::fromBinary($data, [
+            'filename' => 'file.txt'
+        ]);
 
         $this->assertInstanceOf(
             DownloadResponse::class,
@@ -118,6 +122,14 @@ final class DownloadResponseTest extends TestCase
         $this->expectException(ServerException::class);
 
         $response = new DownloadResponse('tests/Mock/invalid.txt');
+    }
+
+    public function testSetBody(): void
+    {
+        $this->expectException(ServerException::class);
+
+        $response = new DownloadResponse('tests/Mock/test.txt');
+        $response->setBody('test');
     }
 
 }

@@ -20,15 +20,15 @@
         }
     },
     "require": {
-        "fyre/cookie": "^1.0",
-        "fyre/filesystem": "^1.0",
-        "fyre/negotiate": "^1.0",
-        "fyre/request": "^1.0",
-        "fyre/response": "^1.0",
-        "fyre/useragent": "^1.0"
+        "fyre/cookie": "^3.0",
+        "fyre/filesystem": "^2.0",
+        "fyre/negotiate": "^2.0",
+        "fyre/request": "^3.0",
+        "fyre/response": "^3.0",
+        "fyre/useragent": "^2.0"
     },
     "require-dev": {
-        "fyre/datetime": "^1.0",
-        "phpunit/phpunit": "^9"
+        "fyre/datetime": "^2.0",
+        "phpunit/phpunit": "^10"
     }
 }

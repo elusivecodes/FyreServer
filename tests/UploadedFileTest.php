@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use
-    Fyre\FileSystem\File,
-    Fyre\Server\Exceptions\ServerException,
-    Fyre\Server\UploadedFile,
-    PHPUnit\Framework\TestCase;
+use Fyre\FileSystem\File;
+use Fyre\Server\Exceptions\ServerException;
+use Fyre\Server\UploadedFile;
+use PHPUnit\Framework\TestCase;
 
-use const
-    UPLOAD_ERR_NO_FILE;
+use const UPLOAD_ERR_NO_FILE;
 
 final class UploadedFileTest extends TestCase
 {

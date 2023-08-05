@@ -3,110 +3,125 @@ declare(strict_types=1);
 
 namespace Tests\ServerRequest;
 
-use
-    Fyre\Http\Request,
-    Fyre\Server\ServerRequest,
-    Locale,
-    PHPUnit\Framework\TestCase;
+use Fyre\Http\Request;
+use Fyre\Server\ServerRequest;
+use Locale;
+use PHPUnit\Framework\TestCase;
 
 final class ServerRequestTest extends TestCase
 {
 
-    protected ServerRequest $request;
-
-    use
-        CookieTest,
-        EnvTest,
-        FileTest,
-        GetTest,
-        LocaleTest,
-        NegotiateTest,
-        PostTest,
-        ServerTest,
-        UriTest,
-        UserAgentTest;
+    use CookieTestTrait;
+    use EnvTestTrait;
+    use FileTestTrait;
+    use GetTestTrait;
+    use LocaleTestTrait;
+    use NegotiateTestTrait;
+    use PostTestTrait;
+    use ServerTestTrait;
+    use UriTestTrait;
+    use UserAgentTestTrait;
 
     public function testRequest(): void
     {
+        $request = new ServerRequest();
+
         $this->assertInstanceOf(
             Request::class,
-            $this->request
+            $request
         );
     }
 
     public function testIsAjax(): void
     {
+        $request = new ServerRequest();
+
         $this->assertFalse(
-            $this->request->isAjax()
+            $request->isAjax()
         );
     }
 
     public function testIsAjaxTrue(): void
     {
-        $this->request->setGlobals('server', [
-            'HTTP_X_REQUESTED_WITH' => 'XmlHttpRequest'
+        $request = new ServerRequest([
+            'globals' => [
+                'server' => [
+                    'HTTP_X_REQUESTED_WITH' => 'XmlHttpRequest'
+                ]
+            ]
         ]);
 
         $this->assertTrue(
-            $this->request->isAjax()
+            $request->isAjax()
         );
     }
 
     public function testIsCli(): void
     {
+        $request = new ServerRequest();
+
         $this->assertTrue(
-            $this->request->isCli()
+            $request->isCli()
         );
     }
 
     public function testIsSecure(): void
     {
+        $request = new ServerRequest();
+
         $this->assertFalse(
-            $this->request->isSecure()
+            $request->isSecure()
         );
     }
 
     public function testIsSecureHttps(): void
     {
-        $this->request->setGlobals('server', [
-            'HTTPS' => 'ON'
+        $request = new ServerRequest([
+            'globals' => [
+                'server' => [
+                    'HTTPS' => 'ON'
+                ]
+            ]
         ]);
 
         $this->assertTrue(
-            $this->request->isSecure()
+            $request->isSecure()
         );
     }
 
     public function testIsSecureForwardedProto(): void
     {
-        $this->request->setGlobals('server', [
-            'HTTP_X_FORWARDED_PROTO' => 'https'
+        $request = new ServerRequest([
+            'globals' => [
+                'server' => [
+                    'HTTP_X_FORWARDED_PROTO' => 'https'
+                ]
+            ]
         ]);
 
         $this->assertTrue(
-            $this->request->isSecure()
+            $request->isSecure()
         );
     }
 
     public function testIsSecureFrontEndHttps(): void
     {
-        $this->request->setGlobals('server', [
-            'HTTP_FRONT_END_HTTPS' => 'ON'
+        $request = new ServerRequest([
+            'globals' => [
+                'server' => [
+                    'HTTP_FRONT_END_HTTPS' => 'ON'
+                ]
+            ]
         ]);
 
         $this->assertTrue(
-            $this->request->isSecure()
+            $request->isSecure()
         );
     }
 
     protected function setUp(): void
     {
         Locale::setDefault('en');
-
-        $this->request = new ServerRequest([
-            'baseUri' => 'https://test.com/',
-            'supportedLocales' => ['en-us', 'en']
-        ]);
     }
 
 }

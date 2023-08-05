@@ -3,26 +3,23 @@ declare(strict_types=1);
 
 namespace Fyre\Server;
 
-use 
-    Fyre\Cookie\Cookie,
-    Fyre\Cookie\CookieStore,
-    Fyre\DateTime\DateTimeInterface,
-    Fyre\Http\Response,
-    SimpleXMLElement;
+use DateTimeInterface;
+use Fyre\DateTime\DateTime;
+use Fyre\Http\Cookie;
+use Fyre\Http\Response;
+use SimpleXMLElement;
 
-use const
-    JSON_PRETTY_PRINT;
+use const JSON_PRETTY_PRINT;
 
-use function
-    array_key_exists,
-    gmdate,
-    header,
-    http_response_code,
-    is_numeric,
-    is_string,
-    json_encode,
-    strtotime,
-    time;
+use function array_key_exists;
+use function gmdate;
+use function header;
+use function http_response_code;
+use function is_numeric;
+use function is_string;
+use function json_encode;
+use function strtotime;
+use function time;
 
 /**
  * ClientResponse
@@ -32,26 +29,38 @@ class ClientResponse extends Response
 
     protected const HEADER_FORMAT = 'D, d-M-Y H:i:s e';
 
+    protected array $cookies = [];
+
     /**
      * New ClientResponse constructor.
+     * @param array $options The response options.
      */
-    public function __construct()
+    public function __construct(array $options = [])
     {
-        $this->noCache();
-        $this->setContentType('text/html');
+        $options['headers'] ??= [];
+        $options['headers']['Content-Type'] ??= 'text/html; charset=UTF-8';
+        $options['headers']['Cache-Control'] ??= ['no-store', 'max-age=0', 'no-cache'];
+
+        parent::__construct($options);
     }
 
     /**
      * Delete a cookie.
      * @param string $name The cookie name.
      * @param array $options The cookie options.
-     * @return ClientResponse The ClientResponse.
+     * @return ClientResponse A new ClientResponse.
      */
     public function deleteCookie(string $name, array $options = []): static
     {
-        CookieStore::delete($name, $options);
+        $options['expires'] ??= 1;
 
-        return $this;
+        $cookie = new Cookie($name, '', $options);
+
+        $temp = clone $this;
+
+        $temp->cookies[$cookie->getId()] = $cookie;
+
+        return $temp;
     }
 
     /**
@@ -61,7 +70,15 @@ class ClientResponse extends Response
      */
     public function getCookie(string $name): Cookie|null
     {
-        return CookieStore::get($name);
+        foreach ($this->cookies AS $cookie) {
+            if ($cookie->getName() !== $name) {
+                continue;
+            }
+
+            return $cookie;
+        }
+
+        return null;
     }
 
     /**
@@ -71,75 +88,48 @@ class ClientResponse extends Response
      */
     public function hasCookie(string $name): bool
     {
-        return CookieStore::has($name);
+        return $this->getCookie($name) !== null;
     }
 
     /**
      * Set headers to prevent browser caching.
-     * @return ClientResponse The ClientResponse.
+     * @return ClientResponse A new ClientResponse.
      */
     public function noCache(): static
     {
-        $this->setHeader('Cache-Control', ['no-store', 'max-age=0', 'no-cache']);
-
-        return $this;
-    }
-
-    /**
-     * Set a redirect response.
-     * @param string $uri The URI to redirect to.
-     * @param int $code The header status code.
-     * @return ClientResponse The ClientResponse.
-     */
-    public function redirect(string $uri, int $code = 302): static
-    {
-        if (array_key_exists('REQUEST_METHOD', $_SERVER) && $this->getProtocolVersion() >= 1.1) {
-            if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-                $code = 303;
-            } else if ($code === 302) {
-                $code = 307;
-            }
-        }
-
-        $this->setStatusCode($code);
-        $this->setHeader('Location', $uri);
-
-        return $this;
+        return $this->setHeader('Cache-Control', ['no-store', 'max-age=0', 'no-cache']);
     }
 
     /**
      * Send the response to the client.
-     * @return ClientResponse The ClientResponse.
      */
     public function send(): void
     {
-        $protocol = $this->getProtocolVersion();
-        $code = $this->getStatusCode();
-        $reason = $this->getReason();
-
-        http_response_code($code);
-        header('HTTP/'.$protocol.' '.$code.' '.$reason);
+        http_response_code($this->statusCode);
+        header('HTTP/'.$this->protocolVersion.' '.$this->statusCode.' '.$this->getReason());
 
         foreach ($this->headers AS $header) {
-            header($header->__toString(), false, $code);
+            header((string) $header, false, $this->statusCode);
         }
 
-        CookieStore::dispatch();
+        foreach ($this->cookies AS $cookie) {
+            $cookie->dispatch();
+        }
 
-        echo $this->body;
+        if ($this->body) {
+            echo $this->body;
+        }
     }
 
     /**
      * Set the content type header
      * @param string $mimeType The MIME type.
      * @param string $charset The character set.
-     * @return ClientResponse The ClientResponse.
+     * @return ClientResponse A new ClientResponse.
      */
     public function setContentType(string $mimeType, string $charset = 'UTF-8'): static
     {
-        $this->setHeader('Content-Type', $mimeType.'; charset='.$charset);
-
-        return $this;
+        return $this->setHeader('Content-Type', $mimeType.'; charset='.$charset);
     }
 
     /**
@@ -147,7 +137,7 @@ class ClientResponse extends Response
      * @param string $name The cookie name.
      * @param string $value The cookie value.
      * @param array $options The cookie options.
-     * @return ClientResponse The ClientResponse.
+     * @return ClientResponse A new ClientResponse.
      */
     public function setCookie(string $name, string $value, array $options = []): static
     {
@@ -155,76 +145,76 @@ class ClientResponse extends Response
             $options['expires'] += time();
         }
 
-        CookieStore::set($name, $value, $options);
+        $cookie = new Cookie($name, $value, $options);
 
-        return $this;
+        $temp = clone $this;
+
+        $temp->cookies[$cookie->getId()] = $cookie;
+
+        return $temp;
     }
 
     /**
      * Set the date header.
-     * @param DateTimeInterface|\DateTimeInterface|string|int $date The date.
-     * @return ClientResponse The ClientResponse.
+     * @param DateTime|DateTimeInterface|string|int $date The date.
+     * @return ClientResponse A new ClientResponse.
      */
-    public function setDate(DateTimeInterface|\DateTimeInterface|string|int $date): static
+    public function setDate(DateTime|DateTimeInterface|string|int $date): static
     {
         $utcString = static::formatDateUTC($date);
 
-        $this->setHeader('Date', $utcString);
-
-        return $this;
+        return $this->setHeader('Date', $utcString);
     }
 
     /**
      * Set a JSON response.
      * @param mixed $data The data to send.
-     * @return ClientResponse The ClientResponse.
+     * @return ClientResponse A new ClientResponse.
      */
     public function setJson(mixed $data): static
     {
-        $this->setContentType('application/json');
+        $data = json_encode($data, JSON_PRETTY_PRINT);
 
-        $this->body = json_encode($data, JSON_PRETTY_PRINT);
-
-        return $this;
+        return $this
+            ->setContentType('application/json')
+            ->setBody($data);
     }
 
     /**
      * Set the last modified date header.
-     * @param DateTimeInterface|\DateTimeInterface|string|int $date The date.
-     * @return ClientResponse The ClientResponse.
+     * @param DateTime|DateTimeInterface|string|int $date The date.
+     * @return ClientResponse A new ClientResponse.
      */
-    public function setLastModified(DateTimeInterface|\DateTimeInterface|string|int $date): static
+    public function setLastModified(DateTime|DateTimeInterface|string|int $date): static
     {
         $utcString = static::formatDateUTC($date);
 
-        $this->setHeader('Last-Modified', $utcString);
-
-        return $this;
+        return $this->setHeader('Last-Modified', $utcString);
     }
 
     /**
      * Set an XML response.
      * @param SimpleXMLElement $data The data to send.
-     * @return ClientResponse The ClientResponse.
+     * @return ClientResponse A new ClientResponse.
      */
     public function setXml(SimpleXMLElement $data): static
     {
-        $this->setContentType('application/xml');
+        $data = $data->asXML();
 
-        $this->body = $data->asXML();
-
-        return $this;
+        return $this
+            ->setContentType('application/xml')
+            ->setBody($data);
     }
 
     /**
      * Format a UTC date.
-     * @param DateTimeInterface|\DateTimeInterface|string|int $date The date to format.
+     * @param DateTime|DateTimeInterface|string|int $date The date to format.
      * @return string The formatted UTC date.
      */
-    protected static function formatDateUTC(DateTimeInterface|\DateTimeInterface|string|int $date): string
+    protected static function formatDateUTC(DateTime|DateTimeInterface|string|int $date): string
     {
         if (is_numeric($date)) {
-            $timestamp = $date;
+            $timestamp = (int) $date;
         } else if (is_string($date)) {
             $timestamp = strtotime($date);
         } else {

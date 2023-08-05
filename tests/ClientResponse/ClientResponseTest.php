@@ -3,62 +3,56 @@ declare(strict_types=1);
 
 namespace Tests\ClientResponse;
 
-use
-    Fyre\Cookie\CookieStore,
-    Fyre\Http\Response,
-    Fyre\Server\ClientResponse,
-    PHPUnit\Framework\TestCase,
-    SimpleXMLElement;
+use Fyre\Server\ClientResponse;
+use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 
-use function
-    json_decode;
+use function json_decode;
 
 final class ClientResponseTest extends TestCase
 {
 
     protected ClientResponse $response;
 
-    use
-        ContentTypeTest,
-        CookieTest,
-        DateTest,
-        RedirectTest;
-
-    public function testResponse(): void
-    {
-        $this->assertInstanceOf(
-            Response::class,
-            $this->response
-        );
-    }
+    use ContentTypeTestTrait;
+    use CookieTestTrait;
+    use DateTestTrait;
 
     public function testNoCache(): void
     {
+        $response = new ClientResponse();
+
         $this->assertSame(
             'no-store, max-age=0, no-cache',
-            $this->response->getHeaderValue('Cache-Control')
+            $response->getHeaderValue('Cache-Control')
         );
     }
 
     public function testSetJson(): void
     {
+        $response1 = new ClientResponse();
+        $response2 = $response1->setJson(['a' => 1]);
+
         $this->assertSame(
-            $this->response,
-            $this->response->setJson(['a' => 1])
+            '',
+            $response1->getBody()
         );
 
-        $json = $this->response->getBody();
+        $this->assertSame(
+            'text/html; charset=UTF-8',
+            $response1->getHeaderValue('Content-Type')
+        );
 
         $this->assertSame(
             [
                 'a' => 1
             ],
-            json_decode($json, true)
+            json_decode($response2->getBody(), true)
         );
 
         $this->assertSame(
             'application/json; charset=UTF-8',
-            $this->response->getHeaderValue('Content-Type')
+            $response2->getHeaderValue('Content-Type')
         );
     }
 
@@ -66,27 +60,28 @@ final class ClientResponseTest extends TestCase
     {
         $xml = new SimpleXMLElement('<books><book><title>Test</title></book></books>');
 
+        $response1 = new ClientResponse();
+        $response2 = $response1->setXml($xml);
+
         $this->assertSame(
-            $this->response,
-            $this->response->setXml($xml)
+            '',
+            $response1->getBody()
+        );
+
+        $this->assertSame(
+            'text/html; charset=UTF-8',
+            $response1->getHeaderValue('Content-Type')
         );
 
         $this->assertSame(
             $xml->asXML(),
-            $this->response->getBody()
+            $response2->getBody()
         );
 
         $this->assertSame(
             'application/xml; charset=UTF-8',
-            $this->response->getHeaderValue('Content-Type')
+            $response2->getHeaderValue('Content-Type')
         );
-    }
-
-    protected function setUp(): void
-    {
-        CookieStore::clear();
-
-        $this->response = new ClientResponse();
     }
 
 }

@@ -3,18 +3,15 @@ declare(strict_types=1);
 
 namespace Fyre\Server;
 
-use
-    Fyre\FileSystem\Exceptions\FileSystemException,
-    Fyre\FileSystem\File,
-    Fyre\Server\Exceptions\ServerException,
-    Fyre\Utility\Path;
+use Fyre\FileSystem\Exceptions\FileSystemException;
+use Fyre\FileSystem\File;
+use Fyre\Server\Exceptions\ServerException;
+use Fyre\Utility\Path;
 
-use const
-    UPLOAD_ERR_OK;
+use const UPLOAD_ERR_OK;
 
-use function
-    is_uploaded_file,
-    move_uploaded_file;
+use function is_uploaded_file;
+use function move_uploaded_file;
 
 /**
  * UploadedFile

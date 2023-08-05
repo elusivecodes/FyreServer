@@ -3,16 +3,14 @@ declare(strict_types=1);
 
 namespace Fyre\Server;
 
-use
-    Fyre\FileSystem\File,
-    Fyre\Server\Exceptions\ServerException;
+use Fyre\FileSystem\File;
+use Fyre\Server\Exceptions\ServerException;
 
-use function
-    fclose,
-    file_put_contents,
-    readfile,
-    stream_get_meta_data,
-    tmpfile;
+use function fclose;
+use function file_put_contents;
+use function readfile;
+use function stream_get_meta_data;
+use function tmpfile;
 
 /**
  * DownloadResponse
@@ -25,48 +23,45 @@ class DownloadResponse extends ClientResponse
     /**
      * Create a DownloadResponse from binary data.
      * @param string $data The file data.
-     * @param string $filename The download file name.
-     * @param string $mimeType The file MIME type.
+     * @param array $options The response options.
      */
-    public static function fromBinary(string $data, string $filename = null, string $mimeType = null)
+    public static function fromBinary(string $data, array $options = [])
     {
         $tmpFile = tmpfile();
         $metaData = stream_get_meta_data($tmpFile);
         fclose($tmpFile);
 
-        $path = $metaData['uri'];
+        file_put_contents($metaData['uri'], $data);
 
-        file_put_contents($path, $data);
-
-        return new static($path, $filename, $mimeType);
+        return new static($metaData['uri'], $options);
     }
 
     /**
      * New DownloadResponse constructor.
      * @param string $path The file path.
-     * @param string $filename The download file name.
-     * @param string $mimeType The file MIME type.
+     * @param array $options The response options.
+     * @throws ServerException if the file path is not valid.
      */
-    public function __construct(string $path, string $filename = null, string $mimeType = null)
+    public function __construct(string $path, array $options = [])
     {
-        parent::__construct();
-
         $this->file = new File($path);
 
         if (!$this->file->exists()) {
             throw ServerException::forMissingFile($this->file->path());
         }
 
-        $filename ??= $this->file->baseName();
-        $mimeType ??= $this->file->mimeType();
-        $contentLength ??= $this->file->size();
+        $options['filename'] ??= $this->file->baseName();
+        $options['mimeType'] ??= $this->file->mimeType();
 
-        $this->setContentType($mimeType);
-        $this->setHeader('Content-Disposition', 'attachment; filename="'.$filename.'"');
-        $this->setHeader('Expires', '0');
-        $this->setHeader('Content-Transfer-Encoding', 'binary');
-        $this->setHeader('Content-Length', (string) $contentLength);
-        $this->setHeader('Cache-Control', ['private', 'no-transform', 'no-store', 'must-revalidate']);
+        $options['headers'] ??= [];
+        $options['headers']['Content-Type'] ??= $options['mimeType'].'; charset=UTF-8';
+        $options['headers']['Content-Disposition'] ??= 'attachment; filename="'.$options['filename'].'"';
+        $options['headers']['Expires'] ??= '0';
+        $options['headers']['Content-Transfer-Encoding'] ??= 'binary';
+        $options['headers']['Content-Length'] ??= (string) $this->file->size();
+        $options['headers']['Cache-Control'] ??= ['private', 'no-transform', 'no-store', 'must-revalidate'];
+
+        parent::__construct($options);
     }
 
     /**
@@ -91,11 +86,11 @@ class DownloadResponse extends ClientResponse
     /**
      * Set the message body.
      * @param string $data The message body.
-     * @return Message The Message.
+     * @throws ServerException as body cannot be set for a DownloadResponse.
      */
     public function setBody(string $data): static
     {
-        return $this;
+        throw ServerException::forUnsupportedSetBody();
     }
 
 }

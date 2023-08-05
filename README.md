@@ -1,6 +1,6 @@
 # FyreServer
 
-**FyreServer** is a free, HTTP server request/response library for *PHP*.
+**FyreServer** is a free, open-source immutable HTTP server request/response library for *PHP*.
 
 
 ## Table Of Contents
@@ -8,6 +8,7 @@
 - [Server Requests](#server-requests)
 - [Client Responses](#client-responses)
 - [Download Responses](#download-responses)
+- [Redirect Responses](#redirect-responses)
 - [Uploaded Files](#uploaded-files)
 
 
@@ -23,8 +24,10 @@ composer require fyre/server
 In PHP:
 
 ```php
-use Fyre\Server\ServerRequest;
 use Fyre\Server\ClientResponse;
+use Fyre\Server\DownloadResponse;
+use Fyre\Server\RedirectResponse;
+use Fyre\Server\ServerRequest;
 ```
 
 
@@ -34,9 +37,12 @@ This class extends the [*Request*](https://github.com/elusivecodes/FyreRequest) 
 
 - `$options` is an array containing configuration options.
     - `baseUri` is a string representing the base URI to use.
+    - `method` is a string representing the request method, and will default to the server request method.
     - `body` is a string representing the request body, and will default to the value of `php://input`.
+    - `headers` is an array containing headers to set, and will default to the server headers.
     - `defaultLocale` is a string representing the default locale, and will default to the system default.
     - `supportedLocales` is an array containing the supported locales.
+    - `protocolVersion` is a string representing the protocol version, and will default to "*1.1*".
 
 ```php
 $request = new ServerRequest($options);
@@ -201,7 +207,7 @@ Negotiate a value from HTTP headers.
 - `$strict` is a boolean indicating whether to not use a default fallback, and will default to *false*.
 
 ```php
-$request->negotiate($type, $supported, $strict);
+$value = $request->negotiate($type, $supported, $strict);
 ```
 
 **Set Locale**
@@ -211,18 +217,24 @@ Set the current locale.
 - `$locale` is a string representing the locale.
 
 ```php
-$request->setLocale($locale);
+$newRequest = $request->setLocale($locale);
 ```
 
-The locale must be present in the `supportedLocales` property of the *ServerRequest* `$options` parameter, or the default locale will be used.
+The locale must be present in the `supportedLocales` property of the *ServerRequest* `$options` parameter.
 
 
 ## Client Responses
 
 This class extends the [*Response*](https://github.com/elusivecodes/FyreResponse) class.
 
+- `$options` is an array containing configuration options.
+    - `body` is a string representing the message body, and will default to "".
+    - `headers` is an array containing additional headers to set.
+    - `protocolVersion` is a string representing the protocol version, and will default to "*1.1*".
+    - `statusCode` is a number representing the status code, and will default to *200*.
+
 ```php
-$response = new ClientResponse();
+$response = new ClientResponse($options);
 ```
 
 **Delete Cookie**
@@ -236,7 +248,7 @@ $response = new ClientResponse();
     - `sameSite` is a string representing the cookie same site, and will default to "*Lax*".
 
 ```php
-$response->deleteCookie($name, $options);
+$newResponse = $response->deleteCookie($name, $options);
 ```
 
 **Get Cookie**
@@ -264,18 +276,7 @@ $hasCookie = $response->hasCookie($name);
 Set headers to prevent browser caching.
 
 ```php
-$response->noCache();
-```
-
-**Redirect**
-
-Set a redirect response.
-
-- `$uri` is a string representing the URI to redirect to.
-- `$code` is a number representing the header status code, and will default to *302*.
-
-```php
-$response->redirect($uri, $code);
+$newResponse = $response->noCache();
 ```
 
 **Send**
@@ -291,10 +292,10 @@ $response->send();
 Set the content type header
 
 - `$mimeType` is a string representing the MIME type.
-- `$charset` is a string representing the character set, and will default to "*UTF-*".
+- `$charset` is a string representing the character set, and will default to "*UTF-8*".
 
 ```php
-$response->setContentType($mimeType, $charset);
+$newResponse = $response->setContentType($mimeType, $charset);
 ```
 
 **Set Cookie**
@@ -312,7 +313,7 @@ Set a cookie value.
     - `sameSite` is a string representing the cookie same site, and will default to "*Lax*".
 
 ```php
-$response->setCookie($name, $value, $options);
+$newResponse = $response->setCookie($name, $value, $options);
 ```
 
 **Set Date**
@@ -322,7 +323,7 @@ Set the date header.
 - `$date` is a string, number or *DateTime* object representing the date.
 
 ```php
-$response->setDate($date);
+$newResponse = $response->setDate($date);
 ```
 
 **Set JSON**
@@ -332,7 +333,7 @@ Set a JSON response.
 - `$data` is the data to send.
 
 ```php
-$response->setJson($data);
+$newResponse = $response->setJson($data);
 ```
 
 **Set Last Modified**
@@ -342,7 +343,7 @@ Set the last modified date header.
 - `$date` is a string, number or *DateTime* object representing the date.
 
 ```php
-$response->setLastModified($date);
+$newResponse = $response->setLastModified($date);
 ```
 
 **Set XML**
@@ -352,7 +353,7 @@ Set an XML response.
 - `$data` is a *SimpleXMLElement* containing the data to send.
 
 ```php
-$response->setXml($data);
+$newResponse = $response->setXml($data);
 ```
 
 
@@ -361,21 +362,26 @@ $response->setXml($data);
 This class extends the [*ClientResponse*](#client-responses) class.
 
 - `$path` is a string representing the file path.
-- `$filename` is a string representing the download filename, and will default to the file name.
-- `$mimeType` is a string representing the MIME type, and will default to the file MIME type.
+- `$options` is an array containing configuration options.
+    - `filename` is a string representing the download filename, and will default to the file name.
+    - `mimeType` is a string representing the MIME type, and will default to the file MIME type.
+    - `headers` is an array containing additional headers to set.
+    - `protocolVersion` is a string representing the protocol version, and will default to "*1.1*".
+    - `statusCode` is a number representing the status code, and will default to *200*.
 
 ```php
-$response = new DownloadResponse($path, $filename, $mimeType);
+$response = new DownloadResponse($path, $options);
 ```
 
 **From Binary**
 
 - `$data` is a string representing the file data.
-- `$filename` is a string representing the download filename.
-- `$mimeType` is a string representing the MIME type, and will default to the file MIME type.
+- `$options` is an array containing configuration options.
+    - `filename` is a string representing the download filename, and will default to the file name.
+    - `mimeType` is a string representing the MIME type, and will default to the file MIME type.
 
 ```php
-$response = DownloadResponse::fromBinary($data, $filename, $mimeType);
+$response = DownloadResponse::fromBinary($data, $options);
 ```
 
 **Get File**
@@ -384,6 +390,19 @@ Get the download [*File*](https://github.com/elusivecodes/FyreFileSystem#files).
 
 ```php
 $file = $response->getFile();
+```
+
+
+## Redirect Responses
+
+This class extends the [*ClientResponse*](#client-responses) class.
+
+- `$uri` is a [*Uri*](https://github.com/elusivecodes/FyreURI) or string representing the URI to redirect to.
+- `$code` is a number representing the header status code, and will default to *302*.
+- `$options` is an array containing configuration options.
+
+```php
+$response = new RedirectResponse($uri, $code $options);
 ```
 
 

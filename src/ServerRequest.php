@@ -3,40 +3,36 @@ declare(strict_types=1);
 
 namespace Fyre\Server;
 
-use
-    Fyre\Http\Negotiate,
-    Fyre\Http\Request,
-    Fyre\Http\UserAgent,
-    Fyre\Server\Exceptions\ServerException,
-    Fyre\Server\UploadedFile,
-    Locale,
-    RecursiveArrayIterator,
-    RecursiveIteratorIterator;
+use Fyre\Http\Negotiate;
+use Fyre\Http\Request;
+use Fyre\Http\Uri;
+use Fyre\Http\UserAgent;
+use Fyre\Server\Exceptions\ServerException;
+use Locale;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
-use const
-    FILTER_DEFAULT,
-    PHP_SAPI,
-    PHP_URL_PATH;
+use const FILTER_DEFAULT;
+use const PHP_SAPI;
+use const PHP_URL_PATH;
 
-use function
-    array_is_list,
-    array_key_exists,
-    array_map,
-    array_splice,
-    count,
-    explode,
-    file_get_contents,
-    filter_var,
-    getenv,
-    in_array,
-    is_array,
-    is_string,
-    parse_url,
-    str_replace,
-    str_starts_with,
-    strtolower,
-    substr,
-    ucwords;
+use function array_key_exists;
+use function array_map;
+use function array_merge;
+use function array_splice;
+use function count;
+use function explode;
+use function file_get_contents;
+use function filter_var;
+use function getenv;
+use function in_array;
+use function is_array;
+use function parse_url;
+use function str_replace;
+use function str_starts_with;
+use function strtolower;
+use function substr;
+use function ucwords;
 
 /**
  * ServerRequest
@@ -54,22 +50,48 @@ class ServerRequest extends Request
 
     /**
      * New ServerRequest constructor.
-     * @param array $options Options for the request.
+     * @param array $options The request options.
      */
     public function __construct(array $options = [])
     {
-        parent::__construct();
+        $options['globals'] ??= [];
+        $options['globals']['server'] ??= null;
 
-        $this->userAgent = new UserAgent();
-
-        $this->uri->parseUri($options['baseUri'] ?? '');
-
-        $this->body = $options['body'] ?? file_get_contents('php://input');
-
-        $this->defaultLocale = $options['defaultLocale'] ??  Locale::getDefault();
+        $this->defaultLocale = $options['defaultLocale'] ?? Locale::getDefault();
         $this->supportedLocales = $options['supportedLocales'] ?? [];
 
-        $this->loadGlobals('server');
+        foreach ($options['globals'] AS $type => $data) {
+            $this->loadGlobals($type, $data);
+        }
+
+        $options['method'] ??= $this->getServer('REQUEST_METHOD');
+        $options['headers'] = array_merge(static::buildHeaders($this->getServer()), $options['headers'] ?? []);
+        $options['body'] ??= file_get_contents('php://input');
+
+        $uri = new Uri($options['baseUri'] ?? '');
+
+        $requestUri =  $this->getServer('REQUEST_URI');
+
+        if ($requestUri) {
+            $path = parse_url($requestUri, PHP_URL_PATH);
+            $uri = $uri->setPath($path);
+        }
+
+        $query = $this->getServer('QUERY_STRING');
+
+        if ($query) {
+            $uri = $uri->setQueryString($query);
+        }
+
+        parent::__construct($uri, $options);
+
+        $userAgent = $this->getHeaderValue('User-Agent') ?? '';
+
+        $this->userAgent = new UserAgent($userAgent);
+
+        if ($this->supportedLocales !== [] && $this->hasHeader('Accept-Language')) {
+            $this->locale = $this->negotiate('language', $this->supportedLocales);
+        }
     }
 
     /**
@@ -203,7 +225,7 @@ class ServerRequest extends Request
 
         $xForwardedProto = $this->getHeaderValue('X-Forwarded-Proto');
 
-        if (strtolower($xForwardedProto) === 'https') {
+        if ($xForwardedProto && strtolower($xForwardedProto) === 'https') {
             return true;
         }
 
@@ -241,50 +263,22 @@ class ServerRequest extends Request
     }
 
     /**
-     * Set global data.
-     * @param string $type The global type.
-     * @param array $data The data.
-     * @param bool $overwrite Whether to overwrite the global data.
-     * @return ServerRequest The ServerRequest.
-     */
-    public function setGlobals(string $type, array $data, bool $overwrite = true): static
-    {
-        if ($type === 'file') {
-            $data = static::normalizeFiles($data);
-            $data = static::buildFiles($data);
-        }
-
-        if ($overwrite) {
-            $this->globals[$type] = $data;
-        } else {
-            $this->globals[$type] ??= [];
-            $this->globals[$type] += $data;
-        }
-
-        if ($type === 'server') {
-            $this->populateHeaders($data);
-            $this->parseServer($data);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the current locale.
      * @param string $locale The locale.
      * @return ServerRequest The ServerRequest.
+     * @throws ServerException if the locale is not supported.
      */
     public function setLocale(string $locale): static
     {
         if (!in_array($locale, $this->supportedLocales, true)) {
-            $locale = $this->defaultLocale;
+            throw ServerException::forUnsupportedLocale($locale);
         }
 
-        $this->locale = $locale;
+        $temp = clone $this;
 
-        Locale::setDefault($this->locale);
+        $temp->locale = $locale;
 
-        return $this;
+        return $temp;
     }
 
     /**
@@ -334,8 +328,9 @@ class ServerRequest extends Request
     /**
      * Load global data.
      * @param string $type The global type.
+     * @param array|data $data The data.
      */
-    protected function loadGlobals(string $type): void
+    protected function loadGlobals(string $type, array|null $data = null): void
     {
         if (array_key_exists($type, $this->globals)) {
             return;
@@ -343,91 +338,31 @@ class ServerRequest extends Request
 
         switch ($type) {
             case 'cookie':
-                $data = $_COOKIE;
+                $data ??= $_COOKIE;
                 break;
             case 'get':
-                $data = $_GET;
+                $data ??= $_GET;
                 break;
             case 'file':
-                $data = $_FILES;
+                $data ??= $_FILES;
+
+                $data = static::normalizeFiles($data);
+                $data = static::buildFiles($data);
                 break;
             case 'post':
-                $data = $_POST;
+                $data ??= $_POST;
                 break;
             case 'request':
-                $data = $_REQUEST;
+                $data ??= $_REQUEST;
                 break;
             case 'server':
-                $data = $_SERVER;
+                $data ??= $_SERVER;
                 break;
             default:
                 return;
         }
 
-        $this->setGlobals($type, $data);
-    }
-
-    /**
-     * Parse server data from the $_SERVER data.
-     * @param array $data The $_SERVER data.
-     */
-    protected function parseServer(array $data): void
-    {
-
-        $method = $this->getServer('REQUEST_METHOD');
-        $requestUri =  $this->getServer('REQUEST_URI');
-        $query = $this->getServer('QUERY_STRING');
-        $userAgent = $this->getHeaderValue('User-Agent');
-
-        if ($method) {
-            $this->setMethod($method);
-        }
-
-        if ($requestUri) {
-            $path = parse_url($requestUri, PHP_URL_PATH);
-            $this->uri->setPath($path);
-        }
-
-        if ($query) {
-            $this->uri->setQueryString($query);
-        }
-
-        if ($userAgent) {
-            $this->userAgent->setAgentString($userAgent);
-        }
-
-        if ($this->supportedLocales !== []) {
-            $locale = $this->negotiate('language', $this->supportedLocales);
-
-            $this->setLocale($locale);
-        }
-    }
-
-    /**
-     * Populate headers from the $_SERVER data.
-     * @param array $data The $_SERVER data.
-     */
-    protected function populateHeaders(array $data): void
-    {
-        $contentType = $data['CONTENT_TYPE'] ?? getenv('CONTENT_TYPE');
-
-        if ($contentType) {
-            $this->setHeader('Content-Type', $contentType);
-        }
-
-        foreach ($data AS $key => $value) {
-            if (!str_starts_with($key, 'HTTP_')) {
-                continue;
-            }
-
-            $header = substr($key, 5);
-            $header = strtolower($header);
-            $header = str_replace('_', ' ', $header);
-            $header = ucwords($header);
-            $header = str_replace(' ', '-', $header);
-
-            $this->setHeader($header, $value);
-        }
+        $this->globals[$type] = $data;
     }
 
     /**
@@ -447,6 +382,38 @@ class ServerRequest extends Request
             },
             $files
         );
+    }
+
+    /**
+     * Populate headers from the $_SERVER data.
+     * @param array $data The $_SERVER data.
+     * @return array The headers.
+     */
+    protected static function buildHeaders(array $data): array
+    {
+        $headers = [];
+
+        $contentType = $data['CONTENT_TYPE'] ?? getenv('CONTENT_TYPE');
+
+        if ($contentType) {
+            $headers['Content-Type'] = $contentType;
+        }
+
+        foreach ($data AS $key => $value) {
+            if (!str_starts_with($key, 'HTTP_')) {
+                continue;
+            }
+
+            $header = substr($key, 5);
+            $header = strtolower($header);
+            $header = str_replace('_', ' ', $header);
+            $header = ucwords($header);
+            $header = str_replace(' ', '-', $header);
+
+            $headers[$header] = $value;
+        }
+
+        return $headers;
     }
 
     /**

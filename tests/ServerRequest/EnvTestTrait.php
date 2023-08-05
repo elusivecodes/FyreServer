@@ -3,22 +3,24 @@ declare(strict_types=1);
 
 namespace Tests\ServerRequest;
 
-use const
-    FILTER_VALIDATE_EMAIL;
+use Fyre\Server\ServerRequest;
 
-use function
-    putenv;
+use const FILTER_VALIDATE_EMAIL;
 
-trait EnvTest
+use function putenv;
+
+trait EnvTestTrait
 {
 
     public function testGetEnv(): void
     {
         putenv('test=value');
 
+        $request = new ServerRequest();
+
         $this->assertSame(
             'value',
-            $this->request->getEnv('test')
+            $request->getEnv('test')
         );
     }
 
@@ -26,16 +28,20 @@ trait EnvTest
     {
         putenv('value=test');
 
+        $request = new ServerRequest();
+
         $this->assertSame(
             '',
-            $this->request->getEnv('test', FILTER_VALIDATE_EMAIL)
+            $request->getEnv('test', FILTER_VALIDATE_EMAIL)
         );
     }
 
     public function testGetEnvInvalid(): void
     {
+        $request = new ServerRequest();
+
         $this->assertNull(
-            $this->request->getEnv('invalid')
+            $request->getEnv('invalid')
         );
     }
 
