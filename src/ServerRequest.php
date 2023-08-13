@@ -8,7 +8,6 @@ use Fyre\Http\Request;
 use Fyre\Http\Uri;
 use Fyre\Http\UserAgent;
 use Fyre\Server\Exceptions\ServerException;
-use Locale;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 
@@ -27,6 +26,7 @@ use function filter_var;
 use function getenv;
 use function in_array;
 use function is_array;
+use function locale_get_default;
 use function parse_url;
 use function str_replace;
 use function str_starts_with;
@@ -57,7 +57,7 @@ class ServerRequest extends Request
         $options['globals'] ??= [];
         $options['globals']['server'] ??= null;
 
-        $this->defaultLocale = $options['defaultLocale'] ?? Locale::getDefault();
+        $this->defaultLocale = $options['defaultLocale'] ?? locale_get_default();
         $this->supportedLocales = $options['supportedLocales'] ?? [];
 
         foreach ($options['globals'] AS $type => $data) {
