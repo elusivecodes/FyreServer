@@ -99,8 +99,9 @@ class ServerRequest extends Request
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
+     * @return mixed The $_COOKIE value.
      */
-    public function getCookie(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0)
+    public function getCookie(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0): mixed
     {
         return $this->fetchGlobal('cookie', $key, $filter, $options);
     }
@@ -119,8 +120,9 @@ class ServerRequest extends Request
      * @param string $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
+     * @return mixed The $_ENV value.
      */
-    public function getEnv(string $key, int $filter = FILTER_DEFAULT, int|array $options = 0)
+    public function getEnv(string $key, int $filter = FILTER_DEFAULT, int|array $options = 0): mixed
     {
         $value = getenv($key, false);
 
@@ -134,8 +136,9 @@ class ServerRequest extends Request
     /**
      * Get an UploadedFile or array of files from the $_FILE array.
      * @param string|null $key The key.
+     * @return mixed The $_FILE value.
      */
-    public function getFile(string|null $key = null)
+    public function getFile(string|null $key = null): mixed
     {
         return $this->fetchGlobal('file', $key);
     }
@@ -145,8 +148,9 @@ class ServerRequest extends Request
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
+     * @return mixed The $_GET value.
      */
-    public function getGet(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0)
+    public function getGet(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0): mixed
     {
         return $this->fetchGlobal('get', $key, $filter, $options);
     }
@@ -165,8 +169,9 @@ class ServerRequest extends Request
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
+     * @return mixed The $_POST value.
      */
-    public function getPost(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0)
+    public function getPost(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0): mixed
     {
         return $this->fetchGlobal('post', $key, $filter, $options);
     }
@@ -176,8 +181,9 @@ class ServerRequest extends Request
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
+     * @return mixed The $_SERVER value.
      */
-    public function getServer(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0)
+    public function getServer(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0): mixed
     {
         return $this->fetchGlobal('server', $key, $filter, $options);
     }

@@ -24,8 +24,9 @@ class DownloadResponse extends ClientResponse
      * Create a DownloadResponse from binary data.
      * @param string $data The file data.
      * @param array $options The response options.
+     * @return DownloadResponse A new DownloadResponse.
      */
-    public static function fromBinary(string $data, array $options = [])
+    public static function fromBinary(string $data, array $options = []): static
     {
         $tmpFile = tmpfile();
         $metaData = stream_get_meta_data($tmpFile);
