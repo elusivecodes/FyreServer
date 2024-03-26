@@ -5,6 +5,7 @@ namespace Fyre\Server;
 
 use Fyre\FileSystem\Exceptions\FileSystemException;
 use Fyre\FileSystem\File;
+use Fyre\FileSystem\Folder;
 use Fyre\Server\Exceptions\ServerException;
 use Fyre\Utility\Path;
 
@@ -115,7 +116,7 @@ class UploadedFile extends File
         $folder = new Folder($destination, true);
 
         $name ??= $this->clientName();
-        $path = $folder->getPath().'/'.$name;
+        $path = Path::join($folder->path, $name);
 
         $this->hasMoved = move_uploaded_file($this->path, $path);
 
