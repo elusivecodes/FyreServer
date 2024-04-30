@@ -116,7 +116,7 @@ class UploadedFile extends File
         $folder = new Folder($destination, true);
 
         $name ??= $this->clientName();
-        $path = Path::join($folder->path, $name);
+        $path = Path::join($folder->path(), $name);
 
         $this->hasMoved = move_uploaded_file($this->path, $path);
 
