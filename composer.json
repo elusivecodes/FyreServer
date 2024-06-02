@@ -28,7 +28,7 @@
         "fyre/useragent": "^2.0"
     },
     "require-dev": {
-        "fyre/datetime": "^2.0",
+        "fyre/datetime": "^3.0",
         "phpunit/phpunit": "^10"
     }
 }
