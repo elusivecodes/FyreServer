@@ -7,10 +7,10 @@ use Fyre\Server\ServerRequest;
 
 use const FILTER_VALIDATE_EMAIL;
 
-trait GetTestTrait
+trait QueryTestTrait
 {
 
-    public function testGetGet(): void
+    public function testGetQuery(): void
     {
         $request = new ServerRequest([
             'globals' => [
@@ -22,11 +22,11 @@ trait GetTestTrait
 
         $this->assertSame(
             'value',
-            $request->getGet('test')
+            $request->getQuery('test')
         );
     }
 
-    public function testGetGetDot(): void
+    public function testGetQueryDot(): void
     {
         $request = new ServerRequest([
             'globals' => [
@@ -40,11 +40,11 @@ trait GetTestTrait
 
         $this->assertSame(
             'value',
-            $request->getGet('test.a')
+            $request->getQuery('test.a')
         );
     }
 
-    public function testGetGetArray(): void
+    public function testGetQueryArray(): void
     {
         $request = new ServerRequest([
             'globals' => [
@@ -60,11 +60,11 @@ trait GetTestTrait
             [
                 'a' => 'value'
             ],
-            $request->getGet('test')
+            $request->getQuery('test')
         );
     }
 
-    public function testGetGetFilter(): void
+    public function testGetQueryFilter(): void
     {
         $request = new ServerRequest([
             'globals' => [
@@ -76,11 +76,11 @@ trait GetTestTrait
 
         $this->assertSame(
             '',
-            $request->getGet('test', FILTER_VALIDATE_EMAIL)
+            $request->getQuery('test', FILTER_VALIDATE_EMAIL)
         );
     }
 
-    public function testGetGetAll(): void
+    public function testGetQueryAll(): void
     {
         $request = new ServerRequest([
             'globals' => [
@@ -94,16 +94,16 @@ trait GetTestTrait
             [
                 'test' => 'value'
             ],
-            $request->getGet()
+            $request->getQuery()
         );
     }
 
-    public function testGetGetInvalid(): void
+    public function testGetQueryInvalid(): void
     {
         $request = new ServerRequest();
 
         $this->assertNull(
-            $request->getGet('invalid')
+            $request->getQuery('invalid')
         );
     }
 

@@ -108,22 +108,22 @@ If the `$key` argument is omitted, this method will return an array containing a
 $files = $request->getFile();
 ```
 
-**Get Get**
+**Get Json**
 
-Get a value from the `$_GET` array.
+Get a value from JSON body data.
 
 - `$key` is a string representing the array key using "dot" notation.
 - `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
 - `$options` is a number or array containing flags to use when filtering, and will default to *0*.
 
 ```php
-$value = $request->getGet($key, $filter, $options);
+$value = $request->getJson($key, $filter, $options);
 ```
 
 If the `$key` argument is omitted, this method will return an array containing all values.
 
 ```php
-$values = $request->getGet();
+$values = $request->getJson();
 ```
 
 **Get Locale**
@@ -150,6 +150,24 @@ If the `$key` argument is omitted, this method will return an array containing a
 
 ```php
 $values = $request->getPost();
+```
+
+**Get Query**
+
+Get a value from the `$_GET` array.
+
+- `$key` is a string representing the array key using "dot" notation.
+- `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
+- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
+
+```php
+$value = $request->getQuery($key, $filter, $options);
+```
+
+If the `$key` argument is omitted, this method will return an array containing all values.
+
+```php
+$values = $request->getQuery();
 ```
 
 **Get Server**

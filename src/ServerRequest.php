@@ -26,6 +26,7 @@ use function filter_var;
 use function getenv;
 use function in_array;
 use function is_array;
+use function json_decode;
 use function locale_get_default;
 use function parse_url;
 use function str_replace;
@@ -155,15 +156,15 @@ class ServerRequest extends Request
     }
 
     /**
-     * Get a value from the $_GET array.
+     * Get a value JSON body data.
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param int|array $options Options or flags to use when filtering.
      * @return mixed The $_GET value.
      */
-    public function getGet(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0): mixed
+    public function getJson(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0): mixed
     {
-        return $this->fetchGlobal('get', $key, $filter, $options);
+        return $this->fetchGlobal('json', $key, $filter, $options);
     }
 
     /**
@@ -185,6 +186,18 @@ class ServerRequest extends Request
     public function getPost(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0): mixed
     {
         return $this->fetchGlobal('post', $key, $filter, $options);
+    }
+
+    /**
+     * Get a value from the $_GET array.
+     * @param string|null $key The key.
+     * @param int $filter The filter to apply.
+     * @param int|array $options Options or flags to use when filtering.
+     * @return mixed The $_GET value.
+     */
+    public function getQuery(string|null $key = null, int $filter = FILTER_DEFAULT, int|array $options = 0): mixed
+    {
+        return $this->fetchGlobal('get', $key, $filter, $options);
     }
 
     /**
@@ -316,6 +329,7 @@ class ServerRequest extends Request
             switch ($type) {
                 case 'file':
                 case 'get':
+                case 'json':
                 case 'post':
                     foreach (explode('.', $key) AS $key) {
                         if (!is_array($value) || !array_key_exists($key, $value)) {
@@ -357,14 +371,17 @@ class ServerRequest extends Request
             case 'cookie':
                 $data ??= $_COOKIE;
                 break;
-            case 'get':
-                $data ??= $_GET;
-                break;
             case 'file':
                 $data ??= $_FILES;
 
                 $data = static::normalizeFiles($data);
                 $data = static::buildFiles($data);
+                break;
+            case 'get':
+                $data ??= $_GET;
+                break;
+            case 'json':
+                $data ??= json_decode($this->body, true) ?? [];
                 break;
             case 'post':
                 $data ??= $_POST;

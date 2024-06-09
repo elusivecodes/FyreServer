@@ -14,10 +14,11 @@ final class ServerRequestTest extends TestCase
     use CookieTestTrait;
     use EnvTestTrait;
     use FileTestTrait;
-    use GetTestTrait;
+    use JsonTestTrait;
     use LocaleTestTrait;
     use NegotiateTestTrait;
     use PostTestTrait;
+    use QueryTestTrait;
     use ServerTestTrait;
     use UriTestTrait;
     use UserAgentTestTrait;
