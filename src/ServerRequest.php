@@ -40,6 +40,8 @@ use function ucwords;
 class ServerRequest extends Request
 {
 
+    protected static ServerRequest $instance;
+
     protected UserAgent $userAgent;
 
     protected string $defaultLocale;
@@ -92,6 +94,15 @@ class ServerRequest extends Request
         if ($this->supportedLocales !== [] && $this->hasHeader('Accept-Language')) {
             $this->locale = $this->negotiate('language', $this->supportedLocales);
         }
+    }
+
+    /**
+     * Load a shared ServerRequest instance.
+     * @return ServerRequest The ServerRequest.
+     */
+    public static function instance(): static
+    {
+        return static::$instance ??= new static();
     }
 
     /**

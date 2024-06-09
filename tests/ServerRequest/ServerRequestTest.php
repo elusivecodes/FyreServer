@@ -32,6 +32,24 @@ final class ServerRequestTest extends TestCase
         );
     }
 
+    public function testRequestInstance(): void
+    {
+        $request1 = ServerRequest::instance();
+        $request2 = ServerRequest::instance();
+
+        $this->assertInstanceOf(
+            Request::class,
+            $request1
+        );
+
+        $this->assertInstanceOf(
+            Request::class,
+            $request2
+        );
+    
+        $this->assertSame($request1, $request2);
+    }
+
     public function testIsAjax(): void
     {
         $request = new ServerRequest();

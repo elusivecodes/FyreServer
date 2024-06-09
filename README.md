@@ -48,6 +48,12 @@ This class extends the [*Request*](https://github.com/elusivecodes/FyreRequest) 
 $request = new ServerRequest($options);
 ```
 
+You can also access a shared instance of a *ServerRequest*.
+
+```php
+$request = ServerRequest::instance();
+```
+
 **Get Cookie**
 
 Get a value from the `$_COOKIE` array.
