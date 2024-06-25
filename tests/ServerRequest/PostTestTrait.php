@@ -9,19 +9,56 @@ use const FILTER_VALIDATE_EMAIL;
 
 trait PostTestTrait
 {
-
     public function testGetPost(): void
     {
         $request = new ServerRequest([
             'globals' => [
                 'post' => [
-                    'test' => 'value'
-                ]
-            ]
+                    'test' => 'value',
+                ],
+            ],
         ]);
 
         $this->assertSame(
             'value',
+            $request->getPost('test')
+        );
+    }
+
+    public function testGetPostAll(): void
+    {
+        $request = new ServerRequest([
+            'globals' => [
+                'post' => [
+                    'test' => 'value',
+                ],
+            ],
+        ]);
+
+        $this->assertSame(
+            [
+                'test' => 'value',
+            ],
+            $request->getPost()
+        );
+    }
+
+    public function testGetPostArray(): void
+    {
+        $request = new ServerRequest([
+            'globals' => [
+                'post' => [
+                    'test' => [
+                        'a' => 'value',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertSame(
+            [
+                'a' => 'value',
+            ],
             $request->getPost('test')
         );
     }
@@ -32,10 +69,10 @@ trait PostTestTrait
             'globals' => [
                 'post' => [
                     'test' => [
-                        'a' => 'value'
-                    ]
-                ]
-            ]
+                        'a' => 'value',
+                    ],
+                ],
+            ],
         ]);
 
         $this->assertSame(
@@ -44,57 +81,19 @@ trait PostTestTrait
         );
     }
 
-    public function testGetPostArray(): void
-    {
-        $request = new ServerRequest([
-            'globals' => [
-                'post' => [
-                    'test' => [
-                        'a' => 'value'
-                    ]
-                ]
-            ]
-        ]);
-
-        $this->assertSame(
-            [
-                'a' => 'value'
-            ],
-            $request->getPost('test')
-        );
-    }
-
     public function testGetPostFilter(): void
     {
         $request = new ServerRequest([
             'globals' => [
                 'post' => [
-                    'test' => 'value'
-                ]
-            ]
+                    'test' => 'value',
+                ],
+            ],
         ]);
 
         $this->assertSame(
             '',
             $request->getPost('test', FILTER_VALIDATE_EMAIL)
-        );
-    }
-
-    public function testGetPostAll(): void
-    {
-        $request = new ServerRequest([
-            'globals' => [
-                'post' => [
-                    'test' => 'value'
-                ]
-            ]
-        ]);
-
-        $this->assertSame(
-            [
-                'test' => 'value'
-            ],
-            $request->getPost()
         );
     }
 
@@ -106,5 +105,4 @@ trait PostTestTrait
             $request->getPost('invalid')
         );
     }
-
 }

@@ -9,15 +9,14 @@ use const FILTER_VALIDATE_EMAIL;
 
 trait CookieTestTrait
 {
-
     public function testGetCookie(): void
     {
         $request = new ServerRequest([
             'globals' => [
                 'cookie' => [
-                    'test' => 'value'
-                ]
-            ]
+                    'test' => 'value',
+                ],
+            ],
         ]);
 
         $this->assertSame(
@@ -26,37 +25,37 @@ trait CookieTestTrait
         );
     }
 
-    public function testGetCookieFilter(): void
-    {
-        $request = new ServerRequest([
-            'globals' => [
-                'cookie' => [
-                    'test' => 'value'
-                ]
-            ]
-        ]);
-
-        $this->assertSame(
-            '',
-            $request->getCookie('test', FILTER_VALIDATE_EMAIL)
-        );
-    }
-
     public function testGetCookieAll(): void
     {
         $request = new ServerRequest([
             'globals' => [
                 'cookie' => [
-                    'test' => 'value'
-                ]
-            ]
+                    'test' => 'value',
+                ],
+            ],
         ]);
 
         $this->assertSame(
             [
-                'test' => 'value'
+                'test' => 'value',
             ],
             $request->getCookie()
+        );
+    }
+
+    public function testGetCookieFilter(): void
+    {
+        $request = new ServerRequest([
+            'globals' => [
+                'cookie' => [
+                    'test' => 'value',
+                ],
+            ],
+        ]);
+
+        $this->assertSame(
+            '',
+            $request->getCookie('test', FILTER_VALIDATE_EMAIL)
         );
     }
 
@@ -68,5 +67,4 @@ trait CookieTestTrait
             $request->getCookie('invalid')
         );
     }
-
 }

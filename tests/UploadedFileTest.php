@@ -12,24 +12,11 @@ use const UPLOAD_ERR_NO_FILE;
 
 final class UploadedFileTest extends TestCase
 {
-
-    public function testFile(): void
-    {
-        $file = new UploadedFile([
-            'tmp_name' => '/tmp/php1'
-        ]);
-
-        $this->assertInstanceOf(
-            File::class,
-            $file
-        );
-    }
-
     public function testClientExtension(): void
     {
         $file = new UploadedFile([
             'tmp_name' => '/tmp/php1',
-            'name' => 'test.txt'
+            'name' => 'test.txt',
         ]);
 
         $this->assertSame(
@@ -38,24 +25,11 @@ final class UploadedFileTest extends TestCase
         );
     }
 
-    public function testClientName(): void
-    {
-        $file = new UploadedFile([
-            'tmp_name' => '/tmp/php1',
-            'name' => 'test.txt'
-        ]);
-
-        $this->assertSame(
-            'test.txt',
-            $file->clientName()
-        );
-    }
-
     public function testClientMimeType(): void
     {
         $file = new UploadedFile([
             'tmp_name' => '/tmp/php1',
-            'type' => 'text/plain'
+            'type' => 'text/plain',
         ]);
 
         $this->assertSame(
@@ -64,11 +38,24 @@ final class UploadedFileTest extends TestCase
         );
     }
 
+    public function testClientName(): void
+    {
+        $file = new UploadedFile([
+            'tmp_name' => '/tmp/php1',
+            'name' => 'test.txt',
+        ]);
+
+        $this->assertSame(
+            'test.txt',
+            $file->clientName()
+        );
+    }
+
     public function testError(): void
     {
         $file = new UploadedFile([
             'tmp_name' => '/tmp/php1',
-            'error' => UPLOAD_ERR_NO_FILE
+            'error' => UPLOAD_ERR_NO_FILE,
         ]);
 
         $this->assertSame(
@@ -77,10 +64,22 @@ final class UploadedFileTest extends TestCase
         );
     }
 
+    public function testFile(): void
+    {
+        $file = new UploadedFile([
+            'tmp_name' => '/tmp/php1',
+        ]);
+
+        $this->assertInstanceOf(
+            File::class,
+            $file
+        );
+    }
+
     public function testHasMoved(): void
     {
         $file = new UploadedFile([
-            'tmp_name' => '/tmp/php1'
+            'tmp_name' => '/tmp/php1',
         ]);
 
         $this->assertFalse(
@@ -91,7 +90,7 @@ final class UploadedFileTest extends TestCase
     public function testIsValid(): void
     {
         $file = new UploadedFile([
-            'tmp_name' => '/tmp/php1'
+            'tmp_name' => '/tmp/php1',
         ]);
 
         $this->assertFalse(
@@ -104,10 +103,9 @@ final class UploadedFileTest extends TestCase
         $this->expectException(ServerException::class);
 
         $file = new UploadedFile([
-            'tmp_name' => '/tmp/php1'
+            'tmp_name' => '/tmp/php1',
         ]);
 
         $file->moveTo('tmp');
     }
-
 }

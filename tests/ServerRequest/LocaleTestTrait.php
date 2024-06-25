@@ -8,7 +8,6 @@ use Fyre\Server\ServerRequest;
 
 trait LocaleTestTrait
 {
-
     public function testGetDefaultLocale(): void
     {
         $request = new ServerRequest();
@@ -32,7 +31,7 @@ trait LocaleTestTrait
     public function testSetLocale(): void
     {
         $request1 = new ServerRequest([
-            'supportedLocales' => ['en-US']
+            'supportedLocales' => ['en-US'],
         ]);
         $request2 = $request1->setLocale('en-US');
 
@@ -55,5 +54,4 @@ trait LocaleTestTrait
 
         $request->setLocale('ru');
     }
-
 }

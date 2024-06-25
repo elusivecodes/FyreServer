@@ -11,12 +11,11 @@ use function json_decode;
 
 final class ClientResponseTest extends TestCase
 {
-
-    protected ClientResponse $response;
-
     use ContentTypeTestTrait;
     use CookieTestTrait;
     use DateTestTrait;
+
+    protected ClientResponse $response;
 
     public function testNoCache(): void
     {
@@ -45,7 +44,7 @@ final class ClientResponseTest extends TestCase
 
         $this->assertSame(
             [
-                'a' => 1
+                'a' => 1,
             ],
             json_decode($response2->getBody(), true)
         );
@@ -83,5 +82,4 @@ final class ClientResponseTest extends TestCase
             $response2->getHeaderValue('Content-Type')
         );
     }
-
 }

@@ -9,15 +9,14 @@ use const FILTER_VALIDATE_EMAIL;
 
 trait ServerTestTrait
 {
-
     public function testGetServer(): void
     {
         $request = new ServerRequest([
             'globals' => [
                 'server' => [
-                    'test' => 'value'
-                ]
-            ]
+                    'test' => 'value',
+                ],
+            ],
         ]);
 
         $this->assertSame(
@@ -26,37 +25,37 @@ trait ServerTestTrait
         );
     }
 
-    public function testGetServerFilter(): void
-    {
-        $request = new ServerRequest([
-            'globals' => [
-                'server' => [
-                    'test' => 'value'
-                ]
-            ]
-        ]);
-
-        $this->assertSame(
-            '',
-            $request->getServer('test', FILTER_VALIDATE_EMAIL)
-        );
-    }
-
     public function testGetServerAll(): void
     {
         $request = new ServerRequest([
             'globals' => [
                 'server' => [
-                    'test' => 'value'
-                ]
-            ]
+                    'test' => 'value',
+                ],
+            ],
         ]);
 
         $this->assertSame(
             [
-                'test' => 'value'
+                'test' => 'value',
             ],
             $request->getServer()
+        );
+    }
+
+    public function testGetServerFilter(): void
+    {
+        $request = new ServerRequest([
+            'globals' => [
+                'server' => [
+                    'test' => 'value',
+                ],
+            ],
+        ]);
+
+        $this->assertSame(
+            '',
+            $request->getServer('test', FILTER_VALIDATE_EMAIL)
         );
     }
 
@@ -74,9 +73,9 @@ trait ServerTestTrait
         $request = new ServerRequest([
             'globals' => [
                 'server' => [
-                    'CONTENT_TYPE' => 'application/json'
-                ]
-            ]
+                    'CONTENT_TYPE' => 'application/json',
+                ],
+            ],
         ]);
 
         $this->assertSame(
@@ -90,9 +89,9 @@ trait ServerTestTrait
         $request = new ServerRequest([
             'globals' => [
                 'server' => [
-                    'REQUEST_METHOD' => 'POST'
-                ]
-            ]
+                    'REQUEST_METHOD' => 'POST',
+                ],
+            ],
         ]);
 
         $this->assertSame(
@@ -100,5 +99,4 @@ trait ServerTestTrait
             $request->getMethod()
         );
     }
-
 }

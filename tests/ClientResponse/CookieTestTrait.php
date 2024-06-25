@@ -8,7 +8,6 @@ use Fyre\Server\ClientResponse;
 
 trait CookieTestTrait
 {
-
     public function testDeleteCookie(): void
     {
         $response1 = new ClientResponse();
@@ -72,17 +71,6 @@ trait CookieTestTrait
         );
     }
 
-    public function testSetCookieOptions(): void
-    {
-        $response1 = new ClientResponse();
-        $response2 = $response1->setCookie('test', 'value', ['domain' => 'test.com']);
-
-        $this->assertSame(
-            'test.com',
-            $response2->getCookie('test')->getDomain()
-        );
-    }
-
     public function testSetCookieExpires(): void
     {
         $response1 = new ClientResponse();
@@ -93,4 +81,14 @@ trait CookieTestTrait
         );
     }
 
+    public function testSetCookieOptions(): void
+    {
+        $response1 = new ClientResponse();
+        $response2 = $response1->setCookie('test', 'value', ['domain' => 'test.com']);
+
+        $this->assertSame(
+            'test.com',
+            $response2->getCookie('test')->getDomain()
+        );
+    }
 }

@@ -8,7 +8,6 @@ use Fyre\Server\UploadedFile;
 
 trait FileTestTrait
 {
-
     public function testGetFile(): void
     {
         $request = new ServerRequest([
@@ -19,10 +18,10 @@ trait FileTestTrait
                         'name' => 'test.txt',
                         'type' => 'text/plain',
                         'size' => 1,
-                        'error' => 0
-                    ]
-                ]
-            ]
+                        'error' => 0,
+                    ],
+                ],
+            ],
         ]);
 
         $file = $request->getFile('test');
@@ -53,6 +52,84 @@ trait FileTestTrait
         );
     }
 
+    public function testGetFileAll(): void
+    {
+        $request = new ServerRequest([
+            'globals' => [
+                'file' => [
+                    'test' => [
+                        'tmp_name' => '/tmp/tempname',
+                        'name' => 'test.txt',
+                        'type' => 'text/plain',
+                        'size' => 1,
+                        'error' => 0,
+                    ],
+                ],
+            ],
+        ]);
+
+        $files = $request->getFile();
+
+        $this->assertArrayHasKey(
+            'test',
+            $files
+        );
+
+        $this->assertInstanceOf(
+            UploadedFile::class,
+            $files['test']
+        );
+    }
+
+    public function testGetFileArray(): void
+    {
+        $request = new ServerRequest([
+            'globals' => [
+                'file' => [
+                    'test' => [
+                        'tmp_name' => [
+                            '/tmp/tempname1',
+                            '/tmp/tempname2',
+                        ],
+                        'name' => [
+                            'test1.txt',
+                            'test2.txt',
+                        ],
+                        'type' => [
+                            'text/plain',
+                            'text/plain',
+                        ],
+                        'size' => [
+                            1,
+                            1,
+                        ],
+                        'error' => [
+                            0,
+                            0,
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $files = $request->getFile('test');
+
+        $this->assertCount(
+            2,
+            $files
+        );
+
+        $this->assertInstanceOf(
+            UploadedFile::class,
+            $files[0]
+        );
+
+        $this->assertInstanceOf(
+            UploadedFile::class,
+            $files[1]
+        );
+    }
+
     public function testGetFileDeep(): void
     {
         $request = new ServerRequest([
@@ -60,23 +137,23 @@ trait FileTestTrait
                 'file' => [
                     'test' => [
                         'tmp_name' => [
-                            'a' => '/tmp/tempname'
+                            'a' => '/tmp/tempname',
                         ],
                         'name' => [
-                            'a' => 'test.txt'
+                            'a' => 'test.txt',
                         ],
                         'type' => [
-                            'a' => 'text/plain'
+                            'a' => 'text/plain',
                         ],
                         'size' => [
-                            'a' => 1
+                            'a' => 1,
                         ],
                         'error' => [
-                            'a' => 0
-                        ]
-                    ]
-                ]
-            ]
+                            'a' => 0,
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $file = $request->getFile('test.a');
@@ -107,84 +184,6 @@ trait FileTestTrait
         );
     }
 
-    public function testGetFileArray(): void
-    {
-        $request = new ServerRequest([
-            'globals' => [
-                'file' => [
-                    'test' => [
-                        'tmp_name' => [
-                            '/tmp/tempname1',
-                            '/tmp/tempname2'
-                        ],
-                        'name' => [
-                            'test1.txt',
-                            'test2.txt'
-                        ],
-                        'type' => [
-                            'text/plain',
-                            'text/plain'
-                        ],
-                        'size' => [
-                            1,
-                            1
-                        ],
-                        'error' => [
-                            0,
-                            0
-                        ]
-                    ]
-                ]
-            ]
-        ]);
-
-        $files = $request->getFile('test');
-
-        $this->assertCount(
-            2,
-            $files
-        );
-
-        $this->assertInstanceOf(
-            UploadedFile::class,
-            $files[0]
-        );
-
-        $this->assertInstanceOf(
-            UploadedFile::class,
-            $files[1]
-        );
-    }
-
-    public function testGetFileAll(): void
-    {
-        $request = new ServerRequest([
-            'globals' => [
-                'file' => [
-                    'test' => [
-                        'tmp_name' => '/tmp/tempname',
-                        'name' => 'test.txt',
-                        'type' => 'text/plain',
-                        'size' => 1,
-                        'error' => 0
-                    ]
-                ]
-            ]
-        ]);
-
-        $files = $request->getFile();
-
-        $this->assertArrayHasKey(
-            'test',
-            $files
-        );
-
-        $this->assertInstanceOf(
-            UploadedFile::class,
-            $files['test']
-        );
-    }
-
     public function testGetFileInvalid(): void
     {
         $request = new ServerRequest();
@@ -193,5 +192,4 @@ trait FileTestTrait
             $request->getFile('invalid')
         );
     }
-
 }

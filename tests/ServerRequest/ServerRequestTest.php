@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 final class ServerRequestTest extends TestCase
 {
-
     use CookieTestTrait;
     use EnvTestTrait;
     use FileTestTrait;
@@ -22,34 +21,6 @@ final class ServerRequestTest extends TestCase
     use ServerTestTrait;
     use UriTestTrait;
     use UserAgentTestTrait;
-
-    public function testRequest(): void
-    {
-        $request = new ServerRequest();
-
-        $this->assertInstanceOf(
-            Request::class,
-            $request
-        );
-    }
-
-    public function testRequestInstance(): void
-    {
-        $request1 = ServerRequest::instance();
-        $request2 = ServerRequest::instance();
-
-        $this->assertInstanceOf(
-            Request::class,
-            $request1
-        );
-
-        $this->assertInstanceOf(
-            Request::class,
-            $request2
-        );
-    
-        $this->assertSame($request1, $request2);
-    }
 
     public function testIsAjax(): void
     {
@@ -65,9 +36,9 @@ final class ServerRequestTest extends TestCase
         $request = new ServerRequest([
             'globals' => [
                 'server' => [
-                    'HTTP_X_REQUESTED_WITH' => 'XmlHttpRequest'
-                ]
-            ]
+                    'HTTP_X_REQUESTED_WITH' => 'XmlHttpRequest',
+                ],
+            ],
         ]);
 
         $this->assertTrue(
@@ -93,29 +64,14 @@ final class ServerRequestTest extends TestCase
         );
     }
 
-    public function testIsSecureHttps(): void
-    {
-        $request = new ServerRequest([
-            'globals' => [
-                'server' => [
-                    'HTTPS' => 'ON'
-                ]
-            ]
-        ]);
-
-        $this->assertTrue(
-            $request->isSecure()
-        );
-    }
-
     public function testIsSecureForwardedProto(): void
     {
         $request = new ServerRequest([
             'globals' => [
                 'server' => [
-                    'HTTP_X_FORWARDED_PROTO' => 'https'
-                ]
-            ]
+                    'HTTP_X_FORWARDED_PROTO' => 'https',
+                ],
+            ],
         ]);
 
         $this->assertTrue(
@@ -128,9 +84,9 @@ final class ServerRequestTest extends TestCase
         $request = new ServerRequest([
             'globals' => [
                 'server' => [
-                    'HTTP_FRONT_END_HTTPS' => 'ON'
-                ]
-            ]
+                    'HTTP_FRONT_END_HTTPS' => 'ON',
+                ],
+            ],
         ]);
 
         $this->assertTrue(
@@ -138,9 +94,51 @@ final class ServerRequestTest extends TestCase
         );
     }
 
+    public function testIsSecureHttps(): void
+    {
+        $request = new ServerRequest([
+            'globals' => [
+                'server' => [
+                    'HTTPS' => 'ON',
+                ],
+            ],
+        ]);
+
+        $this->assertTrue(
+            $request->isSecure()
+        );
+    }
+
+    public function testRequest(): void
+    {
+        $request = new ServerRequest();
+
+        $this->assertInstanceOf(
+            Request::class,
+            $request
+        );
+    }
+
+    public function testRequestInstance(): void
+    {
+        $request1 = ServerRequest::instance();
+        $request2 = ServerRequest::instance();
+
+        $this->assertInstanceOf(
+            Request::class,
+            $request1
+        );
+
+        $this->assertInstanceOf(
+            Request::class,
+            $request2
+        );
+
+        $this->assertSame($request1, $request2);
+    }
+
     protected function setUp(): void
     {
         Locale::setDefault('en');
     }
-
 }

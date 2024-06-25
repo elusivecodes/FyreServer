@@ -9,19 +9,56 @@ use const FILTER_VALIDATE_EMAIL;
 
 trait QueryTestTrait
 {
-
     public function testGetQuery(): void
     {
         $request = new ServerRequest([
             'globals' => [
                 'get' => [
-                    'test' => 'value'
-                ]
-            ]
+                    'test' => 'value',
+                ],
+            ],
         ]);
 
         $this->assertSame(
             'value',
+            $request->getQuery('test')
+        );
+    }
+
+    public function testGetQueryAll(): void
+    {
+        $request = new ServerRequest([
+            'globals' => [
+                'get' => [
+                    'test' => 'value',
+                ],
+            ],
+        ]);
+
+        $this->assertSame(
+            [
+                'test' => 'value',
+            ],
+            $request->getQuery()
+        );
+    }
+
+    public function testGetQueryArray(): void
+    {
+        $request = new ServerRequest([
+            'globals' => [
+                'get' => [
+                    'test' => [
+                        'a' => 'value',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertSame(
+            [
+                'a' => 'value',
+            ],
             $request->getQuery('test')
         );
     }
@@ -32,10 +69,10 @@ trait QueryTestTrait
             'globals' => [
                 'get' => [
                     'test' => [
-                        'a' => 'value'
-                    ]
-                ]
-            ]
+                        'a' => 'value',
+                    ],
+                ],
+            ],
         ]);
 
         $this->assertSame(
@@ -44,57 +81,19 @@ trait QueryTestTrait
         );
     }
 
-    public function testGetQueryArray(): void
-    {
-        $request = new ServerRequest([
-            'globals' => [
-                'get' => [
-                    'test' => [
-                        'a' => 'value'
-                    ]
-                ]
-            ]
-        ]);
-
-        $this->assertSame(
-            [
-                'a' => 'value'
-            ],
-            $request->getQuery('test')
-        );
-    }
-
     public function testGetQueryFilter(): void
     {
         $request = new ServerRequest([
             'globals' => [
                 'get' => [
-                    'test' => 'value'
-                ]
-            ]
+                    'test' => 'value',
+                ],
+            ],
         ]);
 
         $this->assertSame(
             '',
             $request->getQuery('test', FILTER_VALIDATE_EMAIL)
-        );
-    }
-
-    public function testGetQueryAll(): void
-    {
-        $request = new ServerRequest([
-            'globals' => [
-                'get' => [
-                    'test' => 'value'
-                ]
-            ]
-        ]);
-
-        $this->assertSame(
-            [
-                'test' => 'value'
-            ],
-            $request->getQuery()
         );
     }
 
@@ -106,5 +105,4 @@ trait QueryTestTrait
             $request->getQuery('invalid')
         );
     }
-
 }

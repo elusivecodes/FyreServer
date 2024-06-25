@@ -8,21 +8,10 @@ use Fyre\Server\ServerRequest;
 
 trait UriTestTrait
 {
-
-    public function testUri(): void
-    {
-        $request = new ServerRequest();
-
-        $this->assertInstanceOf(
-            Uri::class,
-            $request->getUri()
-        );
-    }
-
     public function testServerUri(): void
     {
         $request = new ServerRequest([
-            'baseUri' => 'https://test.com/'
+            'baseUri' => 'https://test.com/',
         ]);
 
         $this->assertSame(
@@ -37,9 +26,9 @@ trait UriTestTrait
             'baseUri' => 'https://test.com/',
             'globals' => [
                 'server' => [
-                    'REQUEST_URI' => '/test/path'
-                ]
-            ]
+                    'REQUEST_URI' => '/test/path',
+                ],
+            ],
         ]);
 
         $this->assertSame(
@@ -54,18 +43,27 @@ trait UriTestTrait
             'baseUri' => 'https://test.com/',
             'globals' => [
                 'server' => [
-                    'QUERY_STRING' => '?a=1&b=2'
-                ]
-            ]
+                    'QUERY_STRING' => '?a=1&b=2',
+                ],
+            ],
         ]);
 
         $this->assertSame(
             [
                 'a' => '1',
-                'b' => '2'
+                'b' => '2',
             ],
             $request->getUri()->getQuery()
         );
     }
 
+    public function testUri(): void
+    {
+        $request = new ServerRequest();
+
+        $this->assertInstanceOf(
+            Uri::class,
+            $request->getUri()
+        );
+    }
 }

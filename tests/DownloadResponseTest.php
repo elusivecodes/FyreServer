@@ -12,14 +12,49 @@ use function file_get_contents;
 
 final class DownloadResponseTest extends TestCase
 {
-
-    public function testResponse(): void
+    public function testFilename(): void
     {
-        $response = new DownloadResponse('tests/Mock/test.txt');
+        $response = new DownloadResponse('tests/Mock/test.txt', [
+            'filename' => 'file.txt',
+        ]);
+
+        $this->assertSame(
+            'attachment; filename="file.txt"',
+            $response->getHeaderValue('Content-Disposition')
+        );
+    }
+
+    public function testFromBinary(): void
+    {
+        $data = file_get_contents('tests/Mock/test.txt');
+
+        $response = DownloadResponse::fromBinary($data, [
+            'filename' => 'file.txt',
+        ]);
 
         $this->assertInstanceOf(
-            ClientResponse::class,
+            DownloadResponse::class,
             $response
+        );
+
+        $this->assertSame(
+            'text/plain; charset=UTF-8',
+            $response->getHeaderValue('Content-Type')
+        );
+
+        $this->assertSame(
+            'attachment; filename="file.txt"',
+            $response->getHeaderValue('Content-Disposition')
+        );
+
+        $this->assertSame(
+            '15',
+            $response->getHeaderValue('Content-Length')
+        );
+
+        $this->assertSame(
+            'This is a test.',
+            $response->getFile()->contents()
         );
     }
 
@@ -58,23 +93,17 @@ final class DownloadResponseTest extends TestCase
         );
     }
 
-
-    public function testFilename(): void
+    public function testInvalidFile(): void
     {
-        $response = new DownloadResponse('tests/Mock/test.txt', [
-            'filename' => 'file.txt'
-        ]);
+        $this->expectException(ServerException::class);
 
-        $this->assertSame(
-            'attachment; filename="file.txt"',
-            $response->getHeaderValue('Content-Disposition')
-        );
+        $response = new DownloadResponse('tests/Mock/invalid.txt');
     }
 
     public function testMimeType(): void
     {
         $response = new DownloadResponse('tests/Mock/test.txt', [
-            'mimeType' => 'application/octet-stream'
+            'mimeType' => 'application/octet-stream',
         ]);
 
         $this->assertSame(
@@ -83,45 +112,14 @@ final class DownloadResponseTest extends TestCase
         );
     }
 
-    public function testFromBinary(): void
+    public function testResponse(): void
     {
-        $data = file_get_contents('tests/Mock/test.txt');
-
-        $response = DownloadResponse::fromBinary($data, [
-            'filename' => 'file.txt'
-        ]);
+        $response = new DownloadResponse('tests/Mock/test.txt');
 
         $this->assertInstanceOf(
-            DownloadResponse::class,
+            ClientResponse::class,
             $response
         );
-
-        $this->assertSame(
-            'text/plain; charset=UTF-8',
-            $response->getHeaderValue('Content-Type')
-        );
-
-        $this->assertSame(
-            'attachment; filename="file.txt"',
-            $response->getHeaderValue('Content-Disposition')
-        );
-
-        $this->assertSame(
-            '15',
-            $response->getHeaderValue('Content-Length')
-        );
-
-        $this->assertSame(
-            'This is a test.',
-            $response->getFile()->contents()
-        );
-    }
-
-    public function testInvalidFile(): void
-    {
-        $this->expectException(ServerException::class);
-
-        $response = new DownloadResponse('tests/Mock/invalid.txt');
     }
 
     public function testSetBody(): void
@@ -131,5 +129,4 @@ final class DownloadResponseTest extends TestCase
         $response = new DownloadResponse('tests/Mock/test.txt');
         $response->setBody('test');
     }
-
 }

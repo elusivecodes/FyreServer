@@ -9,27 +9,27 @@ use Fyre\FileSystem\Folder;
 use Fyre\Server\Exceptions\ServerException;
 use Fyre\Utility\Path;
 
-use const UPLOAD_ERR_OK;
-
 use function is_uploaded_file;
 use function move_uploaded_file;
+
+use const UPLOAD_ERR_OK;
 
 /**
  * UploadedFile
  */
 class UploadedFile extends File
 {
-
-    protected string $originalName;
-
-    protected string|null $mimeType;
-
     protected int $error;
 
     protected bool $hasMoved = false;
 
+    protected string|null $mimeType;
+
+    protected string $originalName;
+
     /**
      * New UploadedFile constructor.
+     *
      * @param array $data The uploaded file data.
      */
     public function __construct(array $data)
@@ -43,6 +43,7 @@ class UploadedFile extends File
 
     /**
      * Get the client extension.
+     *
      * @return string The client extension.
      */
     public function clientExtension(): string
@@ -52,6 +53,7 @@ class UploadedFile extends File
 
     /**
      * Get the client MIME type.
+     *
      * @return string The client MIME type.
      */
     public function clientMimeType(): string|null
@@ -61,6 +63,7 @@ class UploadedFile extends File
 
     /**
      * Get the client filename.
+     *
      * @return string The client filename.
      */
     public function clientName(): string
@@ -70,6 +73,7 @@ class UploadedFile extends File
 
     /**
      * Get the uploaded error code.
+     *
      * @return int The uploaded error code.
      */
     public function error(): int
@@ -79,6 +83,7 @@ class UploadedFile extends File
 
     /**
      * Determine if the uploaded file has been moved.
+     *
      * @return bool TRUE if the uploaded file has been moved, otherwise FALSE.
      */
     public function hasMoved(): bool
@@ -88,6 +93,7 @@ class UploadedFile extends File
 
     /**
      * Determine if the uploaded file is valid.
+     *
      * @return bool TRUE if the uploaded file is valid, otherwise FALSE.
      */
     public function isValid(): bool
@@ -97,9 +103,11 @@ class UploadedFile extends File
 
     /**
      * Move the uploaded file.
+     *
      * @param string $destination The destination.
      * @param string|null $name The new filename.
      * @return File The new File.
+     *
      * @throws ServerException if the upload is not valid.
      * @throws FileSystemExcetion if the file could not be moved.
      */
@@ -126,5 +134,4 @@ class UploadedFile extends File
 
         return new File($path);
     }
-
 }

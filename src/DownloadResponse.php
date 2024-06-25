@@ -17,11 +17,11 @@ use function tmpfile;
  */
 class DownloadResponse extends ClientResponse
 {
-
     protected File $file;
 
     /**
      * Create a DownloadResponse from binary data.
+     *
      * @param string $data The file data.
      * @param array $options The response options.
      * @return DownloadResponse A new DownloadResponse.
@@ -39,8 +39,10 @@ class DownloadResponse extends ClientResponse
 
     /**
      * New DownloadResponse constructor.
+     *
      * @param string $path The file path.
      * @param array $options The response options.
+     *
      * @throws ServerException if the file path is not valid.
      */
     public function __construct(string $path, array $options = [])
@@ -67,6 +69,7 @@ class DownloadResponse extends ClientResponse
 
     /**
      * Get the download File.
+     *
      * @return File The File.
      */
     public function getFile(): File
@@ -86,12 +89,13 @@ class DownloadResponse extends ClientResponse
 
     /**
      * Set the message body.
+     *
      * @param string $data The message body.
+     *
      * @throws ServerException as body cannot be set for a DownloadResponse.
      */
     public function setBody(string $data): static
     {
         throw ServerException::forUnsupportedSetBody();
     }
-
 }

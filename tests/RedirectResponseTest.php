@@ -10,17 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 final class RedirectResponseTest extends TestCase
 {
-
-    public function testResponse(): void
-    {
-        $response = new RedirectResponse('https://test.com/');
-
-        $this->assertInstanceOf(
-            ClientResponse::class,
-            $response
-        );
-    }
-
     public function testRedirect(): void
     {
         $response = new RedirectResponse('https://test.com/');
@@ -51,6 +40,16 @@ final class RedirectResponseTest extends TestCase
         );
     }
 
+    public function testResponse(): void
+    {
+        $response = new RedirectResponse('https://test.com/');
+
+        $this->assertInstanceOf(
+            ClientResponse::class,
+            $response
+        );
+    }
+
     public function testSetBody(): void
     {
         $this->expectException(ServerException::class);
@@ -58,5 +57,4 @@ final class RedirectResponseTest extends TestCase
         $response = new RedirectResponse('https://test.com/');
         $response->setBody('test');
     }
-
 }

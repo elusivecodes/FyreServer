@@ -7,7 +7,6 @@ use Fyre\Server\ClientResponse;
 
 trait ContentTypeTestTrait
 {
-
     public function testContentType(): void
     {
         $response = new ClientResponse();
@@ -49,5 +48,4 @@ trait ContentTypeTestTrait
             $response2->getHeaderValue('Content-Type')
         );
     }
-
 }

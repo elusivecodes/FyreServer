@@ -5,23 +5,56 @@ namespace Tests\ServerRequest;
 
 use Fyre\Server\ServerRequest;
 
-use const FILTER_VALIDATE_EMAIL;
-
 use function json_encode;
+
+use const FILTER_VALIDATE_EMAIL;
 
 trait JsonTestTrait
 {
-
     public function testGetJson(): void
     {
         $request = new ServerRequest([
             'body' => json_encode([
-                'test' => 'value'
-            ])
+                'test' => 'value',
+            ]),
         ]);
 
         $this->assertSame(
             'value',
+            $request->getJson('test')
+        );
+    }
+
+    public function testGetJsonAll(): void
+    {
+        $request = new ServerRequest([
+            'body' => json_encode([
+                'test' => 'value',
+            ]),
+        ]);
+
+        $this->assertSame(
+            [
+                'test' => 'value',
+            ],
+            $request->getJson()
+        );
+    }
+
+    public function testGetJsonArray(): void
+    {
+        $request = new ServerRequest([
+            'body' => json_encode([
+                'test' => [
+                    'a' => 'value',
+                ],
+            ]),
+        ]);
+
+        $this->assertSame(
+            [
+                'a' => 'value',
+            ],
             $request->getJson('test')
         );
     }
@@ -31,9 +64,9 @@ trait JsonTestTrait
         $request = new ServerRequest([
             'body' => json_encode([
                 'test' => [
-                    'a' => 'value'
-                ]
-            ])
+                    'a' => 'value',
+                ],
+            ]),
         ]);
 
         $this->assertSame(
@@ -42,51 +75,17 @@ trait JsonTestTrait
         );
     }
 
-    public function testGetJsonArray(): void
-    {
-        $request = new ServerRequest([
-            'body' => json_encode([
-                'test' => [
-                    'a' => 'value'
-                ]
-            ])
-        ]);
-
-        $this->assertSame(
-            [
-                'a' => 'value'
-            ],
-            $request->getJson('test')
-        );
-    }
-
     public function testGetJsonFilter(): void
     {
         $request = new ServerRequest([
             'body' => json_encode([
-                'test' => 'value'
-            ])
+                'test' => 'value',
+            ]),
         ]);
 
         $this->assertSame(
             '',
             $request->getJson('test', FILTER_VALIDATE_EMAIL)
-        );
-    }
-
-    public function testGetJsonAll(): void
-    {
-        $request = new ServerRequest([
-            'body' => json_encode([
-                'test' => 'value'
-            ])
-        ]);
-
-        $this->assertSame(
-            [
-                'test' => 'value'
-            ],
-            $request->getJson()
         );
     }
 
@@ -98,5 +97,4 @@ trait JsonTestTrait
             $request->getJson('invalid')
         );
     }
-
 }

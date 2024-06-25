@@ -8,7 +8,6 @@ use Fyre\Server\ClientResponse;
 
 trait DateTestTrait
 {
-
     public function testSetDate(): void
     {
         $response1 = new ClientResponse();
@@ -106,5 +105,4 @@ trait DateTestTrait
             $response2->getHeaderValue('Last-Modified')
         );
     }
-
 }

@@ -10,7 +10,6 @@ use RuntimeException;
  */
 class ServerException extends RuntimeException
 {
-
     public static function forInvalidNegotiationType(string $type): static
     {
         return new static('Invalid negotation type: '.$type);
@@ -40,5 +39,4 @@ class ServerException extends RuntimeException
     {
         return new static('Upload is not valid: '.$filename);
     }
-
 }

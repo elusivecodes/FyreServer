@@ -13,14 +13,14 @@ use function array_key_exists;
  */
 class RedirectResponse extends ClientResponse
 {
-
     /**
      * New RedirectResponse constructor.
+     *
      * @param Uri|string $uri The URI to redirect to.
      * @param int $code The header status code.
      * @param array $options The response options.
      */
-    public function __construct(Uri|string $uri, int $code = 302, array $options = [])
+    public function __construct(string|Uri $uri, int $code = 302, array $options = [])
     {
         if (array_key_exists('REQUEST_METHOD', $_SERVER) && $this->protocolVersion >= 1.1) {
             if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
@@ -39,12 +39,13 @@ class RedirectResponse extends ClientResponse
 
     /**
      * Set the message body.
+     *
      * @param string $data The message body.
+     *
      * @throws ServerException as body cannot be set for a RedirectResponse.
      */
     public function setBody(string $data): static
     {
         throw ServerException::forUnsupportedSetBody();
     }
-
 }

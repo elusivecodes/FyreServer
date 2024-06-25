@@ -5,13 +5,12 @@ namespace Tests\ServerRequest;
 
 use Fyre\Server\ServerRequest;
 
-use const FILTER_VALIDATE_EMAIL;
-
 use function putenv;
+
+use const FILTER_VALIDATE_EMAIL;
 
 trait EnvTestTrait
 {
-
     public function testGetEnv(): void
     {
         putenv('test=value');
@@ -44,5 +43,4 @@ trait EnvTestTrait
             $request->getEnv('invalid')
         );
     }
-
 }

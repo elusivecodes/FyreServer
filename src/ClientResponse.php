@@ -9,8 +9,6 @@ use Fyre\Http\Cookie;
 use Fyre\Http\Response;
 use SimpleXMLElement;
 
-use const JSON_PRETTY_PRINT;
-
 use function array_key_exists;
 use function gmdate;
 use function header;
@@ -21,18 +19,20 @@ use function json_encode;
 use function strtotime;
 use function time;
 
+use const JSON_PRETTY_PRINT;
+
 /**
  * ClientResponse
  */
 class ClientResponse extends Response
 {
-
     protected const HEADER_FORMAT = 'D, d-M-Y H:i:s e';
 
     protected array $cookies = [];
 
     /**
      * New ClientResponse constructor.
+     *
      * @param array $options The response options.
      */
     public function __construct(array $options = [])
@@ -46,6 +46,7 @@ class ClientResponse extends Response
 
     /**
      * Delete a cookie.
+     *
      * @param string $name The cookie name.
      * @param array $options The cookie options.
      * @return ClientResponse A new ClientResponse.
@@ -65,12 +66,13 @@ class ClientResponse extends Response
 
     /**
      * Get a cookie.
+     *
      * @param string $name The cookie name.
      * @return Cookie|null The Cookie.
      */
     public function getCookie(string $name): Cookie|null
     {
-        foreach ($this->cookies AS $cookie) {
+        foreach ($this->cookies as $cookie) {
             if ($cookie->getName() !== $name) {
                 continue;
             }
@@ -83,6 +85,7 @@ class ClientResponse extends Response
 
     /**
      * Determine if a cookie has been set.
+     *
      * @param string $name The cookie name.
      * @return bool TRUE if the cookie exists, otherwise FALSE.
      */
@@ -93,6 +96,7 @@ class ClientResponse extends Response
 
     /**
      * Set headers to prevent browser caching.
+     *
      * @return ClientResponse A new ClientResponse.
      */
     public function noCache(): static
@@ -108,11 +112,11 @@ class ClientResponse extends Response
         http_response_code($this->statusCode);
         header('HTTP/'.$this->protocolVersion.' '.$this->statusCode.' '.$this->getReason());
 
-        foreach ($this->headers AS $header) {
+        foreach ($this->headers as $header) {
             header((string) $header, false, $this->statusCode);
         }
 
-        foreach ($this->cookies AS $cookie) {
+        foreach ($this->cookies as $cookie) {
             $cookie->dispatch();
         }
 
@@ -123,6 +127,7 @@ class ClientResponse extends Response
 
     /**
      * Set the content type header
+     *
      * @param string $mimeType The MIME type.
      * @param string $charset The character set.
      * @return ClientResponse A new ClientResponse.
@@ -134,6 +139,7 @@ class ClientResponse extends Response
 
     /**
      * Set a cookie value.
+     *
      * @param string $name The cookie name.
      * @param string $value The cookie value.
      * @param array $options The cookie options.
@@ -156,10 +162,11 @@ class ClientResponse extends Response
 
     /**
      * Set the date header.
+     *
      * @param DateTime|DateTimeInterface|string|int $date The date.
      * @return ClientResponse A new ClientResponse.
      */
-    public function setDate(DateTime|DateTimeInterface|string|int $date): static
+    public function setDate(DateTime|DateTimeInterface|int|string $date): static
     {
         $utcString = static::formatDateUTC($date);
 
@@ -168,6 +175,7 @@ class ClientResponse extends Response
 
     /**
      * Set a JSON response.
+     *
      * @param mixed $data The data to send.
      * @return ClientResponse A new ClientResponse.
      */
@@ -182,10 +190,11 @@ class ClientResponse extends Response
 
     /**
      * Set the last modified date header.
+     *
      * @param DateTime|DateTimeInterface|string|int $date The date.
      * @return ClientResponse A new ClientResponse.
      */
-    public function setLastModified(DateTime|DateTimeInterface|string|int $date): static
+    public function setLastModified(DateTime|DateTimeInterface|int|string $date): static
     {
         $utcString = static::formatDateUTC($date);
 
@@ -194,6 +203,7 @@ class ClientResponse extends Response
 
     /**
      * Set an XML response.
+     *
      * @param SimpleXMLElement $data The data to send.
      * @return ClientResponse A new ClientResponse.
      */
@@ -208,10 +218,11 @@ class ClientResponse extends Response
 
     /**
      * Format a UTC date.
+     *
      * @param DateTime|DateTimeInterface|string|int $date The date to format.
      * @return string The formatted UTC date.
      */
-    protected static function formatDateUTC(DateTime|DateTimeInterface|string|int $date): string
+    protected static function formatDateUTC(DateTime|DateTimeInterface|int|string $date): string
     {
         if (is_numeric($date)) {
             $timestamp = (int) $date;
@@ -223,5 +234,4 @@ class ClientResponse extends Response
 
         return gmdate(static::HEADER_FORMAT, $timestamp);
     }
-
 }
