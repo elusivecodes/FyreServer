@@ -114,7 +114,7 @@ class ServerRequest extends Request
      *
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
-     * @param int|array $options Options or flags to use when filtering.
+     * @param array|int $options Options or flags to use when filtering.
      * @return mixed The $_COOKIE value.
      */
     public function getCookie(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
@@ -137,7 +137,7 @@ class ServerRequest extends Request
      *
      * @param string $key The key.
      * @param int $filter The filter to apply.
-     * @param int|array $options Options or flags to use when filtering.
+     * @param array|int $options Options or flags to use when filtering.
      * @return mixed The $_ENV value.
      */
     public function getEnv(string $key, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
@@ -167,7 +167,7 @@ class ServerRequest extends Request
      *
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
-     * @param int|array $options Options or flags to use when filtering.
+     * @param array|int $options Options or flags to use when filtering.
      * @return mixed The $_GET value.
      */
     public function getJson(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
@@ -190,7 +190,7 @@ class ServerRequest extends Request
      *
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
-     * @param int|array $options Options or flags to use when filtering.
+     * @param array|int $options Options or flags to use when filtering.
      * @return mixed The $_POST value.
      */
     public function getPost(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
@@ -203,7 +203,7 @@ class ServerRequest extends Request
      *
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
-     * @param int|array $options Options or flags to use when filtering.
+     * @param array|int $options Options or flags to use when filtering.
      * @return mixed The $_GET value.
      */
     public function getQuery(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
@@ -216,7 +216,7 @@ class ServerRequest extends Request
      *
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
-     * @param int|array $options Options or flags to use when filtering.
+     * @param array|int $options Options or flags to use when filtering.
      * @return mixed The $_SERVER value.
      */
     public function getServer(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
@@ -337,8 +337,8 @@ class ServerRequest extends Request
      * @param string $type The global type.
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
-     * @param int|array $options Options or flags to use when filtering.
-     * @return UploadedFile|string|array|null The globals value.
+     * @param array|int $options Options or flags to use when filtering.
+     * @return array|string|UploadedFile|null The globals value.
      */
     protected function fetchGlobal(string $type, string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): array|string|UploadedFile|null
     {
@@ -477,10 +477,10 @@ class ServerRequest extends Request
     /**
      * Filter a value.
      *
-     * @param string|int|float|array $value The value to filter.
+     * @param array|float|int|string $value The value to filter.
      * @param int $filter The filter to apply.
-     * @param int|array $options Options or flags to use when filtering.
-     * @return string|array The globals value.
+     * @param array|int $options Options or flags to use when filtering.
+     * @return array|string The globals value.
      */
     protected static function filterVar(array|float|int|string $value, int $filter = FILTER_DEFAULT, array|int $options = 0): array|string
     {

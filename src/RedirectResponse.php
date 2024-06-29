@@ -16,7 +16,7 @@ class RedirectResponse extends ClientResponse
     /**
      * New RedirectResponse constructor.
      *
-     * @param Uri|string $uri The URI to redirect to.
+     * @param string|Uri $uri The URI to redirect to.
      * @param int $code The header status code.
      * @param array $options The response options.
      */

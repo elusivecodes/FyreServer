@@ -163,7 +163,7 @@ class ClientResponse extends Response
     /**
      * Set the date header.
      *
-     * @param DateTime|DateTimeInterface|string|int $date The date.
+     * @param DateTime|DateTimeInterface|int|string $date The date.
      * @return ClientResponse A new ClientResponse.
      */
     public function setDate(DateTime|DateTimeInterface|int|string $date): static
@@ -191,7 +191,7 @@ class ClientResponse extends Response
     /**
      * Set the last modified date header.
      *
-     * @param DateTime|DateTimeInterface|string|int $date The date.
+     * @param DateTime|DateTimeInterface|int|string $date The date.
      * @return ClientResponse A new ClientResponse.
      */
     public function setLastModified(DateTime|DateTimeInterface|int|string $date): static
@@ -219,7 +219,7 @@ class ClientResponse extends Response
     /**
      * Format a UTC date.
      *
-     * @param DateTime|DateTimeInterface|string|int $date The date to format.
+     * @param DateTime|DateTimeInterface|int|string $date The date to format.
      * @return string The formatted UTC date.
      */
     protected static function formatDateUTC(DateTime|DateTimeInterface|int|string $date): string
