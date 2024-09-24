@@ -72,6 +72,24 @@ If the `$key` argument is omitted, this method will return an array containing a
 $values = $request->getCookie();
 ```
 
+**Get Data**
+
+Get a value from the `$_POST` array or JSON body data.
+
+- `$key` is a string representing the array key using "dot" notation.
+- `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
+- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
+
+```php
+$value = $request->getData($key, $filter, $options);
+```
+
+If the `$key` argument is omitted, this method will return an array containing all values.
+
+```php
+$values = $request->getData();
+```
+
 **Get Default Locale**
 
 Get the default locale.

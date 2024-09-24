@@ -53,13 +53,23 @@ class ServerRequest extends Request
     protected UserAgent $userAgent;
 
     /**
-     * Load a shared ServerRequest instance.
+     * Load the shared ServerRequest instance.
      *
      * @return ServerRequest The ServerRequest.
      */
-    public static function instance(): static
+    public static function instance(ServerRequest|null $instance = null): static
     {
         return static::$instance ??= new static();
+    }
+
+    /**
+     * Set the shared ServerRequest instance.
+     *
+     * @param ServerRequest|null $instance The instance.
+     */
+    public static function setInstance(ServerRequest $instance): void
+    {
+        static::$instance = $instance;
     }
 
     /**
@@ -123,6 +133,21 @@ class ServerRequest extends Request
     }
 
     /**
+     * Get a value from the $_POST array or JSON body data.
+     *
+     * @param string|null $key The key.
+     * @param int $filter The filter to apply.
+     * @param array|int $options Options or flags to use when filtering.
+     * @return mixed The $_POST or JSON body value.
+     */
+    public function getData(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
+    {
+        return $this->getHeaderValue('Content-Type') === 'application/json' ?
+            $this->getJson($key, $filter, $options) :
+            $this->getPost($key, $filter, $options);
+    }
+
+    /**
      * Get the default locale.
      *
      * @return string The default locale.
@@ -163,12 +188,12 @@ class ServerRequest extends Request
     }
 
     /**
-     * Get a value JSON body data.
+     * Get a value from JSON body data.
      *
      * @param string|null $key The key.
      * @param int $filter The filter to apply.
      * @param array|int $options Options or flags to use when filtering.
-     * @return mixed The $_GET value.
+     * @return mixed The JSON body value.
      */
     public function getJson(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
     {

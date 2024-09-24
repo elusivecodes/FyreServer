@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 final class ServerRequestTest extends TestCase
 {
     use CookieTestTrait;
+    use DataTestTrait;
     use EnvTestTrait;
     use FileTestTrait;
     use JsonTestTrait;
@@ -135,6 +136,16 @@ final class ServerRequestTest extends TestCase
         );
 
         $this->assertSame($request1, $request2);
+    }
+
+    public function testRequestInstanceSet(): void
+    {
+        ServerRequest::instance();
+        $request2 = new ServerRequest();
+        ServerRequest::setInstance($request2);
+        $request3 = ServerRequest::instance();
+
+        $this->assertSame($request2, $request3);
     }
 
     protected function setUp(): void
