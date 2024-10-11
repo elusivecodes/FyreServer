@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Fyre\Server;
 
+use Closure;
 use Fyre\Http\Negotiate;
 use Fyre\Http\Request;
 use Fyre\Http\Uri;
@@ -15,6 +16,7 @@ use function array_key_exists;
 use function array_map;
 use function array_merge;
 use function array_splice;
+use function call_user_func;
 use function count;
 use function explode;
 use function file_get_contents;
@@ -40,7 +42,7 @@ use const PHP_URL_PATH;
  */
 class ServerRequest extends Request
 {
-    protected static ServerRequest $instance;
+    protected static Closure|ServerRequest|null $instance = null;
 
     protected string $defaultLocale;
 
@@ -48,26 +50,32 @@ class ServerRequest extends Request
 
     protected string|null $locale = null;
 
+    protected array $params = [];
+
     protected array $supportedLocales = [];
 
     protected UserAgent $userAgent;
 
     /**
-     * Load the shared ServerRequest instance.
+     * Load a shared ServerRequest instance.
      *
      * @return ServerRequest The ServerRequest.
      */
-    public static function instance(ServerRequest|null $instance = null): static
+    public static function instance(): static
     {
-        return static::$instance ??= new static();
+        if (static::$instance && static::$instance instanceof Closure) {
+            return call_user_func(static::$instance);
+        }
+
+        return static::$instance ??= new ServerRequest();
     }
 
     /**
-     * Set the shared ServerRequest instance.
+     * Set a shared ServerRequest instance.
      *
-     * @param ServerRequest|null $instance The instance.
+     * @param Closure|ServerRequest $instance The ServerRequest, or a callback that returns the ServerRequest.
      */
-    public static function setInstance(ServerRequest $instance): void
+    public static function setInstance(Closure|ServerRequest $instance): void
     {
         static::$instance = $instance;
     }
@@ -211,6 +219,17 @@ class ServerRequest extends Request
     }
 
     /**
+     * Get a parameter from the request.
+     *
+     * @param string $key The key.
+     * @return mixed The parameter value.
+     */
+    public function getParam(string $key): mixed
+    {
+        return $this->params[$key] ?? null;
+    }
+
+    /**
      * Get a value from the $_POST array.
      *
      * @param string|null $key The key.
@@ -336,6 +355,22 @@ class ServerRequest extends Request
     }
 
     /**
+     * Set global data for the request.
+     *
+     * @param string $type The global type.
+     * @param array $data The data.
+     * @return ServerRequest The ServerRequest.
+     */
+    public function setGlobal(string $type, array $data): static
+    {
+        $temp = clone $this;
+
+        $temp->globals[$type] = $data;
+
+        return $temp;
+    }
+
+    /**
      * Set the current locale.
      *
      * @param string $locale The locale.
@@ -352,6 +387,22 @@ class ServerRequest extends Request
         $temp = clone $this;
 
         $temp->locale = $locale;
+
+        return $temp;
+    }
+
+    /**
+     * Set a parameter for the request.
+     *
+     * @param string $key The key.
+     * @param mixed $value The parameter value.
+     * @return ServerRequest The ServerRequest.
+     */
+    public function setParam(string $key, mixed $value): static
+    {
+        $temp = clone $this;
+
+        $temp->params[$key] = $value;
 
         return $temp;
     }
@@ -406,7 +457,7 @@ class ServerRequest extends Request
      * Load global data.
      *
      * @param string $type The global type.
-     * @param array|data $data The data.
+     * @param array|null $data The data.
      */
     protected function loadGlobals(string $type, array|null $data = null): void
     {

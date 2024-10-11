@@ -148,6 +148,48 @@ final class ServerRequestTest extends TestCase
         $this->assertSame($request2, $request3);
     }
 
+    public function testRequestInstanceSetClosure(): void
+    {
+        ServerRequest::instance();
+        $request2 = new ServerRequest();
+        ServerRequest::setInstance(fn(): ServerRequest => $request2);
+        $request3 = ServerRequest::instance();
+
+        $this->assertSame($request2, $request3);
+    }
+
+    public function testSetGlobal(): void
+    {
+        $request1 = new ServerRequest();
+        $request2 = $request1->setGlobal('post', [
+            'test' => 'value',
+        ]);
+
+        $this->assertNull(
+            $request1->getPost('test')
+        );
+
+        $this->assertSame(
+            'value',
+            $request2->getPost('test')
+        );
+    }
+
+    public function testSetParam(): void
+    {
+        $request1 = new ServerRequest();
+        $request2 = $request1->setParam('test', 'value');
+
+        $this->assertNull(
+            $request1->getParam('test')
+        );
+
+        $this->assertSame(
+            'value',
+            $request2->getParam('test')
+        );
+    }
+
     protected function setUp(): void
     {
         Locale::setDefault('en');
