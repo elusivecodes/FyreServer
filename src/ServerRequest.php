@@ -16,7 +16,6 @@ use function array_key_exists;
 use function array_map;
 use function array_merge;
 use function array_splice;
-use function call_user_func;
 use function count;
 use function explode;
 use function file_get_contents;
@@ -64,10 +63,10 @@ class ServerRequest extends Request
     public static function instance(): static
     {
         if (static::$instance && static::$instance instanceof Closure) {
-            return call_user_func(static::$instance);
+            return (static::$instance)();
         }
 
-        return static::$instance ??= new ServerRequest();
+        return static::$instance ??= new static();
     }
 
     /**
