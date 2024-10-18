@@ -337,15 +337,15 @@ class ServerRequest extends Request
     {
         switch ($type) {
             case 'content':
-                $accepted = $this->getHeaderValue('Accept');
+                $accepted = $this->getHeaderValue('Accept') ?? '';
 
                 return Negotiate::content($accepted, $supported, $strictMatch);
             case 'encoding':
-                $accepted = $this->getHeaderValue('Accept-Encoding');
+                $accepted = $this->getHeaderValue('Accept-Encoding') ?? '';
 
                 return Negotiate::encoding($accepted, $supported);
             case 'language':
-                $accepted = $this->getHeaderValue('Accept-Language');
+                $accepted = $this->getHeaderValue('Accept-Language') ?? '';
 
                 return Negotiate::language($accepted, $supported);
             default:
