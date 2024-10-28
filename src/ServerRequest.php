@@ -251,7 +251,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Determine if the request was made using AJAX.
+     * Determine whether the request was made using AJAX.
      *
      * @return bool TRUE if the request was made using AJAX, otherwise FALSE.
      */
@@ -263,7 +263,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Determine if the request was made from the CLI.
+     * Determine whether the request was made from the CLI.
      *
      * @return bool TRUE if the request was made from the CLI, otherwise FALSE.
      */
@@ -273,7 +273,7 @@ class ServerRequest extends Request
     }
 
     /**
-     * Determine if the request is using HTTPS.
+     * Determine whether the request is using HTTPS.
      *
      * @return bool TRUE if the request is using HTTPS, otherwise FALSE.
      */

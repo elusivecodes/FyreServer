@@ -83,7 +83,7 @@ class ClientResponse extends Response
     }
 
     /**
-     * Determine if a cookie has been set.
+     * Determine whether a cookie has been set.
      *
      * @param string $name The cookie name.
      * @return bool TRUE if the cookie exists, otherwise FALSE.

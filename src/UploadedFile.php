@@ -82,7 +82,7 @@ class UploadedFile extends File
     }
 
     /**
-     * Determine if the uploaded file has been moved.
+     * Determine whether the uploaded file has been moved.
      *
      * @return bool TRUE if the uploaded file has been moved, otherwise FALSE.
      */
@@ -92,7 +92,7 @@ class UploadedFile extends File
     }
 
     /**
-     * Determine if the uploaded file is valid.
+     * Determine whether the uploaded file is valid.
      *
      * @return bool TRUE if the uploaded file is valid, otherwise FALSE.
      */

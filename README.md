@@ -214,7 +214,7 @@ This method will return a [*UserAgent*](https://github.com/elusivecodes/FyreUser
 
 **Is AJAX**
 
-Determine if the request was made using AJAX.
+Determine whether the request was made using AJAX.
 
 ```php
 $isAjax = $request->isAjax();
@@ -222,7 +222,7 @@ $isAjax = $request->isAjax();
 
 **Is CLI**
 
-Determine if the request was made from the CLI.
+Determine whether the request was made from the CLI.
 
 ```php
 $isCli = $request->isCli();
@@ -230,7 +230,7 @@ $isCli = $request->isCli();
 
 **Is Secure**
 
-Determine if the request is using HTTPS.
+Determine whether the request is using HTTPS.
 
 ```php
 $isSecure = $request->isSecure();
@@ -301,7 +301,7 @@ This method will return a [*Cookie*](https://github.com/elusivecodes/FyreCookie)
 
 **Has Cookie**
 
-Determine if a cookie has been set.
+Determine whether a cookie has been set.
 
 - `$name` is a string representing the cookie name.
 
@@ -482,7 +482,7 @@ $error = $uploadedFile->error();
 
 **Has Moved**
 
-Determine if the uploaded file has been moved.
+Determine whether the uploaded file has been moved.
 
 ```php
 $hasMoved = $uploadedFile->hasMoved();
@@ -490,7 +490,7 @@ $hasMoved = $uploadedFile->hasMoved();
 
 **Is Valid**
 
-Determine if the uploaded file is valid.
+Determine whether the uploaded file is valid.
 
 ```php
 $isValid = $uploadedFile->isValid();
