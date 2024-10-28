@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Fyre\Server;
 
-use Closure;
 use Fyre\Http\Negotiate;
 use Fyre\Http\Request;
 use Fyre\Http\Uri;
@@ -41,8 +40,6 @@ use const PHP_URL_PATH;
  */
 class ServerRequest extends Request
 {
-    protected static Closure|ServerRequest|null $instance = null;
-
     protected string $defaultLocale;
 
     protected array $globals = [];
@@ -54,30 +51,6 @@ class ServerRequest extends Request
     protected array $supportedLocales = [];
 
     protected UserAgent $userAgent;
-
-    /**
-     * Load a shared ServerRequest instance.
-     *
-     * @return ServerRequest The ServerRequest.
-     */
-    public static function instance(): static
-    {
-        if (static::$instance && static::$instance instanceof Closure) {
-            return (static::$instance)();
-        }
-
-        return static::$instance ??= new static();
-    }
-
-    /**
-     * Set a shared ServerRequest instance.
-     *
-     * @param Closure|ServerRequest $instance The ServerRequest, or a callback that returns the ServerRequest.
-     */
-    public static function setInstance(Closure|ServerRequest $instance): void
-    {
-        static::$instance = $instance;
-    }
 
     /**
      * New ServerRequest constructor.
@@ -337,17 +310,17 @@ class ServerRequest extends Request
     {
         switch ($type) {
             case 'content':
-                $accepted = $this->getHeaderValue('Accept') ?? '';
+                $accepted = $this->getHeaderValue('Accept');
 
-                return Negotiate::content($accepted, $supported, $strictMatch);
+                return Negotiate::content($accepted ?? '', $supported, $strictMatch);
             case 'encoding':
-                $accepted = $this->getHeaderValue('Accept-Encoding') ?? '';
+                $accepted = $this->getHeaderValue('Accept-Encoding');
 
-                return Negotiate::encoding($accepted, $supported);
+                return Negotiate::encoding($accepted ?? '', $supported);
             case 'language':
-                $accepted = $this->getHeaderValue('Accept-Language') ?? '';
+                $accepted = $this->getHeaderValue('Accept-Language');
 
-                return Negotiate::language($accepted, $supported);
+                return Negotiate::language($accepted ?? '', $supported);
             default:
                 throw ServerException::forInvalidNegotiationType($type);
         }

@@ -6,6 +6,8 @@ namespace Tests\ClientResponse;
 use Fyre\Http\Cookie;
 use Fyre\Server\ClientResponse;
 
+use function time;
+
 trait CookieTestTrait
 {
     public function testDeleteCookie(): void
@@ -74,7 +76,7 @@ trait CookieTestTrait
     public function testSetCookieExpires(): void
     {
         $response1 = new ClientResponse();
-        $response2 = $response1->setCookie('test', 'value', ['expires' => 60]);
+        $response2 = $response1->setCookie('test', 'value', ['expires' => time() + 60]);
 
         $this->assertFalse(
             $response2->getCookie('test')->isExpired()

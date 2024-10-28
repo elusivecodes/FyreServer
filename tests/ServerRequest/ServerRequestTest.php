@@ -120,44 +120,6 @@ final class ServerRequestTest extends TestCase
         );
     }
 
-    public function testRequestInstance(): void
-    {
-        $request1 = ServerRequest::instance();
-        $request2 = ServerRequest::instance();
-
-        $this->assertInstanceOf(
-            Request::class,
-            $request1
-        );
-
-        $this->assertInstanceOf(
-            Request::class,
-            $request2
-        );
-
-        $this->assertSame($request1, $request2);
-    }
-
-    public function testRequestInstanceSet(): void
-    {
-        ServerRequest::instance();
-        $request2 = new ServerRequest();
-        ServerRequest::setInstance($request2);
-        $request3 = ServerRequest::instance();
-
-        $this->assertSame($request2, $request3);
-    }
-
-    public function testRequestInstanceSetClosure(): void
-    {
-        ServerRequest::instance();
-        $request2 = new ServerRequest();
-        ServerRequest::setInstance(fn(): ServerRequest => $request2);
-        $request3 = ServerRequest::instance();
-
-        $this->assertSame($request2, $request3);
-    }
-
     public function testSetGlobal(): void
     {
         $request1 = new ServerRequest();

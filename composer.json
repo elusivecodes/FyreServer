@@ -20,7 +20,7 @@
         }
     },
     "require": {
-        "fyre/cookie": "^3.0",
+        "fyre/cookie": "^4.0",
         "fyre/filesystem": "^2.0",
         "fyre/negotiate": "^2.0",
         "fyre/request": "^3.0",
@@ -31,7 +31,7 @@
         "friendsofphp/php-cs-fixer": "^3.59",
         "fyre/datetime": "^3.0",
         "fyre/php-cs-fixer-config": "^1.0",
-        "phpunit/phpunit": "^10"
+        "phpunit/phpunit": "^11"
     },
     "scripts": {
         "cs": "php-cs-fixer fix --ansi --verbose --dry-run --diff",

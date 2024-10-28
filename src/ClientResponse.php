@@ -17,7 +17,6 @@ use function is_numeric;
 use function is_string;
 use function json_encode;
 use function strtotime;
-use function time;
 
 use const JSON_PRETTY_PRINT;
 
@@ -53,13 +52,13 @@ class ClientResponse extends Response
      */
     public function deleteCookie(string $name, array $options = []): static
     {
-        $options['expires'] ??= 1;
+        $options['expires'] = 1;
 
         $cookie = new Cookie($name, '', $options);
 
         $temp = clone $this;
 
-        $temp->cookies[$cookie->getId()] = $cookie;
+        $temp->cookies[static::getCookieKey($cookie)] = $cookie;
 
         return $temp;
     }
@@ -113,11 +112,11 @@ class ClientResponse extends Response
         header('HTTP/'.$this->protocolVersion.' '.$this->statusCode.' '.$this->getReason());
 
         foreach ($this->headers as $header) {
-            header((string) $header, false, $this->statusCode);
+            header((string) $header, false);
         }
 
         foreach ($this->cookies as $cookie) {
-            $cookie->dispatch();
+            header($cookie->getHeaderString(), false);
         }
 
         if ($this->body) {
@@ -147,15 +146,15 @@ class ClientResponse extends Response
      */
     public function setCookie(string $name, string $value, array $options = []): static
     {
-        if (array_key_exists('expires', $options)) {
-            $options['expires'] += time();
+        if (array_key_exists('expires', $options) && $options['expires'] instanceof DateTime) {
+            $options['expires'] = $options['expires']->getTimestamp();
         }
 
         $cookie = new Cookie($name, $value, $options);
 
         $temp = clone $this;
 
-        $temp->cookies[$cookie->getId()] = $cookie;
+        $temp->cookies[static::getCookieKey($cookie)] = $cookie;
 
         return $temp;
     }
@@ -233,5 +232,16 @@ class ClientResponse extends Response
         }
 
         return gmdate(static::HEADER_FORMAT, $timestamp);
+    }
+
+    /**
+     * Get the key for a cookie.
+     *
+     * @param Cookie $cookie The Cookie.
+     * @return string The Cookie key.
+     */
+    protected static function getCookieKey(Cookie $cookie): string
+    {
+        return implode(',', [$cookie->getName(), $cookie->getDomain(), $cookie->getPath()]);
     }
 }
