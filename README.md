@@ -48,8 +48,6 @@ This class extends the [*Request*](https://github.com/elusivecodes/FyreRequest) 
 $request = new ServerRequest($options);
 ```
 
-### Server Request Methods
-
 **Get Cookie**
 
 Get a value from the `$_COOKIE` array.
