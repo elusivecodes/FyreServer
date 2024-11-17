@@ -10,7 +10,7 @@ trait UserAgentTestTrait
 {
     public function testServerUserAgent(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 ( .NET CLR 3.5.30729)',
@@ -26,7 +26,7 @@ trait UserAgentTestTrait
 
     public function testUserAgent(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertInstanceOf(
             UserAgent::class,

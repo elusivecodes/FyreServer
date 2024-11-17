@@ -13,7 +13,7 @@ trait JsonTestTrait
 {
     public function testGetJson(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'body' => json_encode([
                 'test' => 'value',
             ]),
@@ -27,7 +27,7 @@ trait JsonTestTrait
 
     public function testGetJsonAll(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'body' => json_encode([
                 'test' => 'value',
             ]),
@@ -43,7 +43,7 @@ trait JsonTestTrait
 
     public function testGetJsonArray(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'body' => json_encode([
                 'test' => [
                     'a' => 'value',
@@ -61,7 +61,7 @@ trait JsonTestTrait
 
     public function testGetJsonDot(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'body' => json_encode([
                 'test' => [
                     'a' => 'value',
@@ -77,7 +77,7 @@ trait JsonTestTrait
 
     public function testGetJsonFilter(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'body' => json_encode([
                 'test' => 'value',
             ]),
@@ -91,7 +91,7 @@ trait JsonTestTrait
 
     public function testGetJsonInvalid(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertNull(
             $request->getJson('invalid')

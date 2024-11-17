@@ -11,7 +11,7 @@ trait QueryTestTrait
 {
     public function testGetQuery(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'get' => [
                     'test' => 'value',
@@ -27,7 +27,7 @@ trait QueryTestTrait
 
     public function testGetQueryAll(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'get' => [
                     'test' => 'value',
@@ -45,7 +45,7 @@ trait QueryTestTrait
 
     public function testGetQueryArray(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'get' => [
                     'test' => [
@@ -65,7 +65,7 @@ trait QueryTestTrait
 
     public function testGetQueryDot(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'get' => [
                     'test' => [
@@ -83,7 +83,7 @@ trait QueryTestTrait
 
     public function testGetQueryFilter(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'get' => [
                     'test' => 'value',
@@ -99,7 +99,7 @@ trait QueryTestTrait
 
     public function testGetQueryInvalid(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertNull(
             $request->getQuery('invalid')

@@ -10,7 +10,7 @@ trait LocaleTestTrait
 {
     public function testGetDefaultLocale(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertSame(
             'en',
@@ -20,7 +20,7 @@ trait LocaleTestTrait
 
     public function testGetLocale(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertSame(
             'en',
@@ -30,9 +30,9 @@ trait LocaleTestTrait
 
     public function testSetLocale(): void
     {
-        $request1 = new ServerRequest([
-            'supportedLocales' => ['en-US'],
-        ]);
+        $this->config->set('App.supportedLocales', ['en-US']);
+
+        $request1 = new ServerRequest($this->config);
         $request2 = $request1->setLocale('en-US');
 
         $this->assertSame(
@@ -50,7 +50,7 @@ trait LocaleTestTrait
     {
         $this->expectException(ServerException::class);
 
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $request->setLocale('ru');
     }

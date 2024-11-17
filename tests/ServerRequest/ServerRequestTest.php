@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\ServerRequest;
 
+use Fyre\Config\Config;
 use Fyre\Http\Request;
 use Fyre\Server\ServerRequest;
-use Locale;
 use PHPUnit\Framework\TestCase;
 
 final class ServerRequestTest extends TestCase
@@ -23,9 +23,11 @@ final class ServerRequestTest extends TestCase
     use UriTestTrait;
     use UserAgentTestTrait;
 
+    protected Config $config;
+
     public function testIsAjax(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertFalse(
             $request->isAjax()
@@ -34,7 +36,7 @@ final class ServerRequestTest extends TestCase
 
     public function testIsAjaxTrue(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'HTTP_X_REQUESTED_WITH' => 'XmlHttpRequest',
@@ -49,7 +51,7 @@ final class ServerRequestTest extends TestCase
 
     public function testIsCli(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertTrue(
             $request->isCli()
@@ -58,7 +60,7 @@ final class ServerRequestTest extends TestCase
 
     public function testIsSecure(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertFalse(
             $request->isSecure()
@@ -67,7 +69,7 @@ final class ServerRequestTest extends TestCase
 
     public function testIsSecureForwardedProto(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'HTTP_X_FORWARDED_PROTO' => 'https',
@@ -82,7 +84,7 @@ final class ServerRequestTest extends TestCase
 
     public function testIsSecureFrontEndHttps(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'HTTP_FRONT_END_HTTPS' => 'ON',
@@ -97,7 +99,7 @@ final class ServerRequestTest extends TestCase
 
     public function testIsSecureHttps(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'HTTPS' => 'ON',
@@ -112,7 +114,7 @@ final class ServerRequestTest extends TestCase
 
     public function testRequest(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertInstanceOf(
             Request::class,
@@ -122,7 +124,7 @@ final class ServerRequestTest extends TestCase
 
     public function testSetGlobal(): void
     {
-        $request1 = new ServerRequest();
+        $request1 = new ServerRequest($this->config);
         $request2 = $request1->setGlobal('post', [
             'test' => 'value',
         ]);
@@ -139,7 +141,7 @@ final class ServerRequestTest extends TestCase
 
     public function testSetParam(): void
     {
-        $request1 = new ServerRequest();
+        $request1 = new ServerRequest($this->config);
         $request2 = $request1->setParam('test', 'value');
 
         $this->assertNull(
@@ -154,6 +156,7 @@ final class ServerRequestTest extends TestCase
 
     protected function setUp(): void
     {
-        Locale::setDefault('en');
+        $this->config = new Config();
+        $this->config->set('App.locale', 'en');
     }
 }

@@ -11,7 +11,7 @@ trait CookieTestTrait
 {
     public function testGetCookie(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'cookie' => [
                     'test' => 'value',
@@ -27,7 +27,7 @@ trait CookieTestTrait
 
     public function testGetCookieAll(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'cookie' => [
                     'test' => 'value',
@@ -45,7 +45,7 @@ trait CookieTestTrait
 
     public function testGetCookieFilter(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'cookie' => [
                     'test' => 'value',
@@ -61,7 +61,7 @@ trait CookieTestTrait
 
     public function testGetCookieInvalid(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertNull(
             $request->getCookie('invalid')

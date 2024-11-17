@@ -10,9 +10,9 @@ trait UriTestTrait
 {
     public function testServerUri(): void
     {
-        $request = new ServerRequest([
-            'baseUri' => 'https://test.com/',
-        ]);
+        $this->config->set('App.baseUri', 'https://test.com/');
+
+        $request = new ServerRequest($this->config);
 
         $this->assertSame(
             'https://test.com/',
@@ -22,8 +22,9 @@ trait UriTestTrait
 
     public function testServerUriPath(): void
     {
-        $request = new ServerRequest([
-            'baseUri' => 'https://test.com/',
+        $this->config->set('App.baseUri', 'https://test.com/');
+
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'REQUEST_URI' => '/test/path',
@@ -39,8 +40,9 @@ trait UriTestTrait
 
     public function testServerUriQuery(): void
     {
-        $request = new ServerRequest([
-            'baseUri' => 'https://test.com/',
+        $this->config->set('App.baseUri', 'https://test.com/');
+
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'QUERY_STRING' => '?a=1&b=2',
@@ -59,7 +61,7 @@ trait UriTestTrait
 
     public function testUri(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertInstanceOf(
             Uri::class,

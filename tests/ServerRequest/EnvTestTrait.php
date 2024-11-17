@@ -15,7 +15,7 @@ trait EnvTestTrait
     {
         putenv('test=value');
 
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertSame(
             'value',
@@ -27,7 +27,7 @@ trait EnvTestTrait
     {
         putenv('value=test');
 
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertSame(
             '',
@@ -37,7 +37,7 @@ trait EnvTestTrait
 
     public function testGetEnvInvalid(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertNull(
             $request->getEnv('invalid')

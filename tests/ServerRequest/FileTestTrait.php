@@ -10,7 +10,7 @@ trait FileTestTrait
 {
     public function testGetFile(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'file' => [
                     'test' => [
@@ -54,7 +54,7 @@ trait FileTestTrait
 
     public function testGetFileAll(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'file' => [
                     'test' => [
@@ -83,7 +83,7 @@ trait FileTestTrait
 
     public function testGetFileArray(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'file' => [
                     'test' => [
@@ -132,7 +132,7 @@ trait FileTestTrait
 
     public function testGetFileDeep(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'file' => [
                     'test' => [
@@ -186,7 +186,7 @@ trait FileTestTrait
 
     public function testGetFileInvalid(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertNull(
             $request->getFile('invalid')

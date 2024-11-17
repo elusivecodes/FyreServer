@@ -11,7 +11,7 @@ trait PostTestTrait
 {
     public function testGetPost(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => 'value',
@@ -27,7 +27,7 @@ trait PostTestTrait
 
     public function testGetPostAll(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => 'value',
@@ -45,7 +45,7 @@ trait PostTestTrait
 
     public function testGetPostArray(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => [
@@ -65,7 +65,7 @@ trait PostTestTrait
 
     public function testGetPostDot(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => [
@@ -83,7 +83,7 @@ trait PostTestTrait
 
     public function testGetPostFilter(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => 'value',
@@ -99,7 +99,7 @@ trait PostTestTrait
 
     public function testGetPostInvalid(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertNull(
             $request->getPost('invalid')

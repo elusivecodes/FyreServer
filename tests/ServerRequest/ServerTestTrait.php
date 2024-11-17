@@ -11,7 +11,7 @@ trait ServerTestTrait
 {
     public function testGetServer(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'test' => 'value',
@@ -27,7 +27,7 @@ trait ServerTestTrait
 
     public function testGetServerAll(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'test' => 'value',
@@ -45,7 +45,7 @@ trait ServerTestTrait
 
     public function testGetServerFilter(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'test' => 'value',
@@ -61,7 +61,7 @@ trait ServerTestTrait
 
     public function testGetServerInvalid(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertNull(
             $request->getServer('invalid')
@@ -70,7 +70,7 @@ trait ServerTestTrait
 
     public function testServerContentType(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'CONTENT_TYPE' => 'application/json',
@@ -86,7 +86,7 @@ trait ServerTestTrait
 
     public function testServerMethod(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'REQUEST_METHOD' => 'POST',

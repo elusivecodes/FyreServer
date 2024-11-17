@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Fyre\Server;
 
+use Fyre\Config\Config;
 use Fyre\Http\Negotiate;
 use Fyre\Http\Request;
 use Fyre\Http\Uri;
@@ -55,15 +56,16 @@ class ServerRequest extends Request
     /**
      * New ServerRequest constructor.
      *
+     * @param Config $config The Config.
      * @param array $options The request options.
      */
-    public function __construct(array $options = [])
+    public function __construct(Config $config, array $options = [])
     {
         $options['globals'] ??= [];
         $options['globals']['server'] ??= null;
 
-        $this->defaultLocale = $options['defaultLocale'] ?? locale_get_default();
-        $this->supportedLocales = $options['supportedLocales'] ?? [];
+        $this->defaultLocale = $config->get('App.locale') ?? locale_get_default();
+        $this->supportedLocales = $config->get('App.supportedLocales', []);
 
         foreach ($options['globals'] as $type => $data) {
             $this->loadGlobals($type, $data);
@@ -73,7 +75,7 @@ class ServerRequest extends Request
         $options['headers'] = array_merge(static::buildHeaders($this->getServer()), $options['headers'] ?? []);
         $options['body'] ??= file_get_contents('php://input');
 
-        $uri = new Uri($options['baseUri'] ?? '');
+        $uri = new Uri($config->get('App.baseUri', ''));
 
         $requestUri = $this->getServer('REQUEST_URI');
 

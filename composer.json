@@ -25,7 +25,8 @@
         "fyre/negotiate": "^2.0",
         "fyre/request": "^3.0",
         "fyre/response": "^3.0",
-        "fyre/useragent": "^2.0"
+        "fyre/useragent": "^2.0",
+        "fyre/config": "^4.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.59",

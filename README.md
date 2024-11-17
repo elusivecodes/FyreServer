@@ -21,32 +21,52 @@
 composer require fyre/server
 ```
 
-In PHP:
-
-```php
-use Fyre\Server\ClientResponse;
-use Fyre\Server\DownloadResponse;
-use Fyre\Server\RedirectResponse;
-use Fyre\Server\ServerRequest;
-```
-
 
 ## Server Requests
 
 This class extends the [*Request*](https://github.com/elusivecodes/FyreRequest) class.
 
+```php
+use Fyre\Server\ServerRequest;
+```
+
+- `$config` is a [*Config*](https://github.com/elusivecodes/FyreConfig).
 - `$options` is an array containing configuration options.
-    - `baseUri` is a string representing the base URI to use.
     - `method` is a string representing the request method, and will default to the server request method.
     - `body` is a string representing the request body, and will default to the value of `php://input`.
     - `headers` is an array containing headers to set, and will default to the server headers.
-    - `defaultLocale` is a string representing the default locale, and will default to the system default.
-    - `supportedLocales` is an array containing the supported locales.
     - `protocolVersion` is a string representing the protocol version, and will default to "*1.1*".
 
 ```php
-$request = new ServerRequest($options);
+$request = new ServerRequest($config, $options);
 ```
+
+Default configuration options will be resolved from the "*App*" key in the [*Config*](https://github.com/elusivecodes/FyreConfig).
+
+- `$options` is an array containing configuration options.
+    - `baseUri` is a string representing the base URI to use, and will default to "".
+    - `locale` is a string representing the default locale, and will default to the system default.
+    - `supportedLocales` is an array containing the supported locales, and will default to `[]`.
+
+```php
+$container->use(Config::class)->set('App', $options);
+```
+
+**Autoloading**
+
+It is recommended to bind the *ServerRequest* to the [*Container*](https://github.com/elusivecodes/FyreContainer) as a singleton.
+
+```php
+$container->singleton(ServerRequest::class);
+```
+
+Any dependencies will be injected automatically when loading from the [*Container*](https://github.com/elusivecodes/FyreContainer).
+
+```php
+$request = $container->use(ServerRequest::class);
+```
+
+### Server Request Methods
 
 **Get Cookie**
 
@@ -263,6 +283,10 @@ The locale must be present in the `supportedLocales` property of the *ServerRequ
 
 This class extends the [*Response*](https://github.com/elusivecodes/FyreResponse) class.
 
+```php
+use Fyre\Server\ClientResponse;
+```
+
 - `$options` is an array containing configuration options.
     - `body` is a string representing the message body, and will default to "".
     - `headers` is an array containing additional headers to set.
@@ -397,6 +421,10 @@ $newResponse = $response->setXml($data);
 
 This class extends the [*ClientResponse*](#client-responses) class.
 
+```php
+use Fyre\Server\DownloadResponse;
+```
+
 - `$path` is a string representing the file path.
 - `$options` is an array containing configuration options.
     - `filename` is a string representing the download filename, and will default to the file name.
@@ -432,6 +460,10 @@ $file = $response->getFile();
 ## Redirect Responses
 
 This class extends the [*ClientResponse*](#client-responses) class.
+
+```php
+use Fyre\Server\RedirectResponse;
+```
 
 - `$uri` is a [*Uri*](https://github.com/elusivecodes/FyreURI) or string representing the URI to redirect to.
 - `$code` is a number representing the header status code, and will default to *302*.

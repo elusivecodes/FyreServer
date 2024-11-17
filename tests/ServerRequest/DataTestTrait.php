@@ -13,7 +13,7 @@ trait DataTestTrait
 {
     public function testGetData(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => 'value',
@@ -29,7 +29,7 @@ trait DataTestTrait
 
     public function testGetDataAll(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => 'value',
@@ -47,7 +47,7 @@ trait DataTestTrait
 
     public function testGetDataArray(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => [
@@ -67,7 +67,7 @@ trait DataTestTrait
 
     public function testGetDataDot(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => [
@@ -85,7 +85,7 @@ trait DataTestTrait
 
     public function testGetDataFilter(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'post' => [
                     'test' => 'value',
@@ -101,7 +101,7 @@ trait DataTestTrait
 
     public function testGetDataInvalid(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest($this->config);
 
         $this->assertNull(
             $request->getData('invalid')
@@ -110,7 +110,7 @@ trait DataTestTrait
 
     public function testGetDataJson(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'CONTENT_TYPE' => 'application/json',
@@ -129,7 +129,7 @@ trait DataTestTrait
 
     public function testGetDataJsonAll(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'CONTENT_TYPE' => 'application/json',
@@ -150,7 +150,7 @@ trait DataTestTrait
 
     public function testGetDataJsonArray(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'CONTENT_TYPE' => 'application/json',
@@ -173,7 +173,7 @@ trait DataTestTrait
 
     public function testGetDataJsonDot(): void
     {
-        $request = new ServerRequest([
+        $request = new ServerRequest($this->config, [
             'globals' => [
                 'server' => [
                     'CONTENT_TYPE' => 'application/json',
