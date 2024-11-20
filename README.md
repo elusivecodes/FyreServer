@@ -45,7 +45,7 @@ Default configuration options will be resolved from the "*App*" key in the [*Con
 
 - `$options` is an array containing configuration options.
     - `baseUri` is a string representing the base URI to use, and will default to "".
-    - `locale` is a string representing the default locale, and will default to the system default.
+    - `defaultLocale` is a string representing the default locale, and will default to the system default.
     - `supportedLocales` is an array containing the supported locales, and will default to `[]`.
 
 ```php

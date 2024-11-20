@@ -20,13 +20,13 @@
         }
     },
     "require": {
+        "fyre/config": "^4.1",
         "fyre/cookie": "^4.0",
         "fyre/filesystem": "^2.0",
         "fyre/negotiate": "^2.0",
         "fyre/request": "^3.0",
         "fyre/response": "^3.0",
-        "fyre/useragent": "^2.0",
-        "fyre/config": "^4.1"
+        "fyre/useragent": "^2.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.59",

@@ -64,7 +64,7 @@ class ServerRequest extends Request
         $options['globals'] ??= [];
         $options['globals']['server'] ??= null;
 
-        $this->defaultLocale = $config->get('App.locale') ?? locale_get_default();
+        $this->defaultLocale = $config->get('App.defaultLocale') ?? locale_get_default();
         $this->supportedLocales = $config->get('App.supportedLocales', []);
 
         foreach ($options['globals'] as $type => $data) {

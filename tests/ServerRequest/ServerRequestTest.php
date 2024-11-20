@@ -157,6 +157,6 @@ final class ServerRequestTest extends TestCase
     protected function setUp(): void
     {
         $this->config = new Config();
-        $this->config->set('App.locale', 'en');
+        $this->config->set('App.defaultLocale', 'en');
     }
 }
