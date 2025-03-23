@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace Tests\ServerRequest;
 
+use Fyre\DateTime\DateTime;
 use Fyre\Server\ServerRequest;
 
 use function putenv;
-
-use const FILTER_VALIDATE_EMAIL;
 
 trait EnvTestTrait
 {
@@ -15,7 +14,7 @@ trait EnvTestTrait
     {
         putenv('test=value');
 
-        $request = new ServerRequest($this->config);
+        $request = new ServerRequest($this->config, $this->type);
 
         $this->assertSame(
             'value',
@@ -23,24 +22,31 @@ trait EnvTestTrait
         );
     }
 
-    public function testGetEnvFilter(): void
-    {
-        putenv('value=test');
-
-        $request = new ServerRequest($this->config);
-
-        $this->assertSame(
-            '',
-            $request->getEnv('test', FILTER_VALIDATE_EMAIL)
-        );
-    }
-
     public function testGetEnvInvalid(): void
     {
-        $request = new ServerRequest($this->config);
+        $request = new ServerRequest($this->config, $this->type);
 
         $this->assertNull(
             $request->getEnv('invalid')
+        );
+    }
+
+    public function testGetEnvType(): void
+    {
+        putenv('value=2024-12-31');
+
+        $request = new ServerRequest($this->config, $this->type);
+
+        $value = $request->getEnv('value', 'date');
+
+        $this->assertInstanceOf(
+            DateTime::class,
+            $value
+        );
+
+        $this->assertSame(
+            '2024-12-31T00:00:00.000+00:00',
+            $value->toISOString()
         );
     }
 }

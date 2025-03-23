@@ -26,17 +26,18 @@
         "fyre/negotiate": "^2.0",
         "fyre/request": "^3.0",
         "fyre/response": "^3.0",
+        "fyre/typeparser": "^5.0",
         "fyre/useragent": "^2.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.59",
         "fyre/datetime": "^3.0",
         "fyre/php-cs-fixer-config": "^1.0",
-        "phpunit/phpunit": "^11"
+        "phpunit/phpunit": "^12"
     },
     "scripts": {
-        "cs": "php-cs-fixer fix --ansi --verbose --dry-run --diff",
-        "cs-fix": "php-cs-fixer fix --ansi --verbose --diff",
+        "cs": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --ansi --verbose --dry-run --diff",
+        "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --ansi --verbose --diff",
         "test": "phpunit tests"
     }
 }

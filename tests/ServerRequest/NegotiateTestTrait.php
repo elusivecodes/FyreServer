@@ -10,7 +10,7 @@ trait NegotiateTestTrait
 {
     public function testNegotiateEncoding(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'server' => [
                     'HTTP_ACCEPT_ENCODING' => 'gzip,deflate',
@@ -28,14 +28,14 @@ trait NegotiateTestTrait
     {
         $this->expectException(ServerException::class);
 
-        $request = new ServerRequest($this->config);
+        $request = new ServerRequest($this->config, $this->type);
 
         $request->negotiate('invalid', []);
     }
 
     public function testNegotiateLanguage(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'server' => [
                     'HTTP_ACCEPT_LANGUAGE' => 'en-gb,en;q=0.5',
@@ -51,7 +51,7 @@ trait NegotiateTestTrait
 
     public function testNegotiateMedia(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'server' => [
                     'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,/;q=0.8',

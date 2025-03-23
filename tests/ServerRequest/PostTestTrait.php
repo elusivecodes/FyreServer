@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Tests\ServerRequest;
 
+use Fyre\DateTime\DateTime;
 use Fyre\Server\ServerRequest;
-
-use const FILTER_VALIDATE_EMAIL;
 
 trait PostTestTrait
 {
     public function testGetPost(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'post' => [
                     'test' => 'value',
@@ -27,7 +26,7 @@ trait PostTestTrait
 
     public function testGetPostAll(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'post' => [
                     'test' => 'value',
@@ -45,7 +44,7 @@ trait PostTestTrait
 
     public function testGetPostArray(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'post' => [
                     'test' => [
@@ -65,7 +64,7 @@ trait PostTestTrait
 
     public function testGetPostDot(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'post' => [
                     'test' => [
@@ -81,28 +80,35 @@ trait PostTestTrait
         );
     }
 
-    public function testGetPostFilter(): void
+    public function testGetPostInvalid(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type);
+
+        $this->assertNull(
+            $request->getPost('invalid')
+        );
+    }
+
+    public function testGetPostType(): void
+    {
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'post' => [
-                    'test' => 'value',
+                    'test' => '2024-12-31',
                 ],
             ],
         ]);
 
-        $this->assertSame(
-            '',
-            $request->getPost('test', FILTER_VALIDATE_EMAIL)
+        $value = $request->getPost('test', 'date');
+
+        $this->assertInstanceOf(
+            DateTime::class,
+            $value
         );
-    }
 
-    public function testGetPostInvalid(): void
-    {
-        $request = new ServerRequest($this->config);
-
-        $this->assertNull(
-            $request->getPost('invalid')
+        $this->assertSame(
+            '2024-12-31T00:00:00.000+00:00',
+            $value->toISOString()
         );
     }
 }

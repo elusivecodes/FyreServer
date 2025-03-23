@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Fyre\Server;
 
 use Fyre\Config\Config;
+use Fyre\DB\TypeParser;
 use Fyre\Http\Negotiate;
 use Fyre\Http\Request;
 use Fyre\Http\Uri;
@@ -19,7 +20,6 @@ use function array_splice;
 use function count;
 use function explode;
 use function file_get_contents;
-use function filter_var;
 use function getenv;
 use function in_array;
 use function is_array;
@@ -32,7 +32,6 @@ use function strtolower;
 use function substr;
 use function ucwords;
 
-use const FILTER_DEFAULT;
 use const PHP_SAPI;
 use const PHP_URL_PATH;
 
@@ -51,21 +50,26 @@ class ServerRequest extends Request
 
     protected array $supportedLocales = [];
 
+    protected TypeParser $typeParser;
+
     protected UserAgent $userAgent;
 
     /**
      * New ServerRequest constructor.
      *
      * @param Config $config The Config.
+     * @param TypeParser $typeParser The TypeParser.
      * @param array $options The request options.
      */
-    public function __construct(Config $config, array $options = [])
+    public function __construct(Config $config, TypeParser $typeParser, array $options = [])
     {
         $options['globals'] ??= [];
         $options['globals']['server'] ??= null;
 
         $this->defaultLocale = $config->get('App.defaultLocale') ?? locale_get_default();
         $this->supportedLocales = $config->get('App.supportedLocales', []);
+
+        $this->typeParser = $typeParser;
 
         foreach ($options['globals'] as $type => $data) {
             $this->loadGlobals($type, $data);
@@ -105,28 +109,26 @@ class ServerRequest extends Request
      * Get a value from the $_COOKIE array.
      *
      * @param string|null $key The key.
-     * @param int $filter The filter to apply.
-     * @param array|int $options Options or flags to use when filtering.
+     * @param string|null $as The type.
      * @return mixed The $_COOKIE value.
      */
-    public function getCookie(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
+    public function getCookie(string|null $key = null, string|null $as = null): mixed
     {
-        return $this->fetchGlobal('cookie', $key, $filter, $options);
+        return $this->fetchGlobal('cookie', $key, $as);
     }
 
     /**
      * Get a value from the $_POST array or JSON body data.
      *
      * @param string|null $key The key.
-     * @param int $filter The filter to apply.
-     * @param array|int $options Options or flags to use when filtering.
+     * @param string|null $as The type.
      * @return mixed The $_POST or JSON body value.
      */
-    public function getData(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
+    public function getData(string|null $key = null, string|null $as = null): mixed
     {
         return $this->getHeaderValue('Content-Type') === 'application/json' ?
-            $this->getJson($key, $filter, $options) :
-            $this->getPost($key, $filter, $options);
+            $this->getJson($key, $as) :
+            $this->getPost($key, $as);
     }
 
     /**
@@ -143,11 +145,10 @@ class ServerRequest extends Request
      * Get a value from the $_ENV array.
      *
      * @param string $key The key.
-     * @param int $filter The filter to apply.
-     * @param array|int $options Options or flags to use when filtering.
+     * @param string|null $as The type.
      * @return mixed The $_ENV value.
      */
-    public function getEnv(string $key, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
+    public function getEnv(string $key, string|null $as = null): mixed
     {
         $value = getenv($key, false);
 
@@ -155,7 +156,11 @@ class ServerRequest extends Request
             return null;
         }
 
-        return static::filterVar($value, $filter, $options);
+        if ($as === null) {
+            return $value;
+        }
+
+        return $this->parseType($value, $as);
     }
 
     /**
@@ -173,13 +178,12 @@ class ServerRequest extends Request
      * Get a value from JSON body data.
      *
      * @param string|null $key The key.
-     * @param int $filter The filter to apply.
-     * @param array|int $options Options or flags to use when filtering.
+     * @param string|null $as The type.
      * @return mixed The JSON body value.
      */
-    public function getJson(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
+    public function getJson(string|null $key = null, string|null $as = null): mixed
     {
-        return $this->fetchGlobal('json', $key, $filter, $options);
+        return $this->fetchGlobal('json', $key, $as);
     }
 
     /**
@@ -207,39 +211,36 @@ class ServerRequest extends Request
      * Get a value from the $_POST array.
      *
      * @param string|null $key The key.
-     * @param int $filter The filter to apply.
-     * @param array|int $options Options or flags to use when filtering.
+     * @param string|null $as The type.
      * @return mixed The $_POST value.
      */
-    public function getPost(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
+    public function getPost(string|null $key = null, string|null $as = null): mixed
     {
-        return $this->fetchGlobal('post', $key, $filter, $options);
+        return $this->fetchGlobal('post', $key, $as);
     }
 
     /**
      * Get a value from the $_GET array.
      *
      * @param string|null $key The key.
-     * @param int $filter The filter to apply.
-     * @param array|int $options Options or flags to use when filtering.
+     * @param string|null $as The type.
      * @return mixed The $_GET value.
      */
-    public function getQuery(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
+    public function getQuery(string|null $key = null, string|null $as = null): mixed
     {
-        return $this->fetchGlobal('get', $key, $filter, $options);
+        return $this->fetchGlobal('get', $key, $as);
     }
 
     /**
      * Get a value from the $_SERVER array.
      *
      * @param string|null $key The key.
-     * @param int $filter The filter to apply.
-     * @param array|int $options Options or flags to use when filtering.
+     * @param string|null $as The type.
      * @return mixed The $_SERVER value.
      */
-    public function getServer(string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): mixed
+    public function getServer(string|null $key = null, string|null $as = null): mixed
     {
-        return $this->fetchGlobal('server', $key, $filter, $options);
+        return $this->fetchGlobal('server', $key, $as);
     }
 
     /**
@@ -386,11 +387,10 @@ class ServerRequest extends Request
      *
      * @param string $type The global type.
      * @param string|null $key The key.
-     * @param int $filter The filter to apply.
-     * @param array|int $options Options or flags to use when filtering.
-     * @return array|string|UploadedFile|null The globals value.
+     * @param string|null $as The type.
+     * @return mixed The globals value.
      */
-    protected function fetchGlobal(string $type, string|null $key = null, int $filter = FILTER_DEFAULT, array|int $options = 0): array|string|UploadedFile|null
+    protected function fetchGlobal(string $type, string|null $key = null, string|null $as = null): mixed
     {
         $this->loadGlobals($type);
 
@@ -420,11 +420,11 @@ class ServerRequest extends Request
             }
         }
 
-        if ($type === 'file') {
+        if ($type === 'file' || $as === null) {
             return $value;
         }
 
-        return static::filterVar($value, $filter, $options);
+        return $this->parseType($value, $as);
     }
 
     /**
@@ -469,6 +469,25 @@ class ServerRequest extends Request
         }
 
         $this->globals[$type] = $data;
+    }
+
+    /**
+     * Parse a value.
+     *
+     * @param mixed $value The value to parse.
+     * @param string $type The type.
+     * @return mixed The parsed value.
+     */
+    protected function parseType(mixed $value, string $type): mixed
+    {
+        if (is_array($value)) {
+            return array_map(
+                fn(mixed $val): mixed => $this->parseType($val, $type),
+                $value
+            );
+        }
+
+        return $this->typeParser->use($type)->parse($value);
     }
 
     /**
@@ -522,26 +541,6 @@ class ServerRequest extends Request
         }
 
         return $headers;
-    }
-
-    /**
-     * Filter a value.
-     *
-     * @param array|float|int|string $value The value to filter.
-     * @param int $filter The filter to apply.
-     * @param array|int $options Options or flags to use when filtering.
-     * @return array|string The globals value.
-     */
-    protected static function filterVar(array|float|int|string $value, int $filter = FILTER_DEFAULT, array|int $options = 0): array|string
-    {
-        if (is_array($value)) {
-            return array_map(
-                fn(mixed $val): array|string => static::filterVar($val, $filter, $options),
-                $value
-            );
-        }
-
-        return (string) filter_var($value, $filter, $options);
     }
 
     /**

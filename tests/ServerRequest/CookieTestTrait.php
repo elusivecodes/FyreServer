@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Tests\ServerRequest;
 
+use Fyre\DateTime\DateTime;
 use Fyre\Server\ServerRequest;
-
-use const FILTER_VALIDATE_EMAIL;
 
 trait CookieTestTrait
 {
     public function testGetCookie(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'cookie' => [
                     'test' => 'value',
@@ -27,7 +26,7 @@ trait CookieTestTrait
 
     public function testGetCookieAll(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'cookie' => [
                     'test' => 'value',
@@ -43,28 +42,35 @@ trait CookieTestTrait
         );
     }
 
-    public function testGetCookieFilter(): void
+    public function testGetCookieInvalid(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type);
+
+        $this->assertNull(
+            $request->getCookie('invalid')
+        );
+    }
+
+    public function testGetCookieType(): void
+    {
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'cookie' => [
-                    'test' => 'value',
+                    'test' => '2024-12-31',
                 ],
             ],
         ]);
 
-        $this->assertSame(
-            '',
-            $request->getCookie('test', FILTER_VALIDATE_EMAIL)
+        $value = $request->getCookie('test', 'date');
+
+        $this->assertInstanceOf(
+            DateTime::class,
+            $value
         );
-    }
 
-    public function testGetCookieInvalid(): void
-    {
-        $request = new ServerRequest($this->config);
-
-        $this->assertNull(
-            $request->getCookie('invalid')
+        $this->assertSame(
+            '2024-12-31T00:00:00.000+00:00',
+            $value->toISOString()
         );
     }
 }

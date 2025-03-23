@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Tests\ServerRequest;
 
+use Fyre\DateTime\DateTime;
 use Fyre\Server\ServerRequest;
-
-use const FILTER_VALIDATE_EMAIL;
 
 trait ServerTestTrait
 {
     public function testGetServer(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'server' => [
                     'test' => 'value',
@@ -27,7 +26,7 @@ trait ServerTestTrait
 
     public function testGetServerAll(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'server' => [
                     'test' => 'value',
@@ -45,23 +44,30 @@ trait ServerTestTrait
 
     public function testGetServerFilter(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'server' => [
-                    'test' => 'value',
+                    'test' => '2024-12-31',
                 ],
             ],
         ]);
 
+        $value = $request->getServer('test', 'date');
+
+        $this->assertInstanceOf(
+            DateTime::class,
+            $value
+        );
+
         $this->assertSame(
-            '',
-            $request->getServer('test', FILTER_VALIDATE_EMAIL)
+            '2024-12-31T00:00:00.000+00:00',
+            $value->toISOString()
         );
     }
 
     public function testGetServerInvalid(): void
     {
-        $request = new ServerRequest($this->config);
+        $request = new ServerRequest($this->config, $this->type);
 
         $this->assertNull(
             $request->getServer('invalid')
@@ -70,7 +76,7 @@ trait ServerTestTrait
 
     public function testServerContentType(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'server' => [
                     'CONTENT_TYPE' => 'application/json',
@@ -86,7 +92,7 @@ trait ServerTestTrait
 
     public function testServerMethod(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'server' => [
                     'REQUEST_METHOD' => 'POST',

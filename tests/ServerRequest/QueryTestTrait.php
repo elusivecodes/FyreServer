@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Tests\ServerRequest;
 
+use Fyre\DateTime\DateTime;
 use Fyre\Server\ServerRequest;
-
-use const FILTER_VALIDATE_EMAIL;
 
 trait QueryTestTrait
 {
     public function testGetQuery(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'get' => [
                     'test' => 'value',
@@ -27,7 +26,7 @@ trait QueryTestTrait
 
     public function testGetQueryAll(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'get' => [
                     'test' => 'value',
@@ -45,7 +44,7 @@ trait QueryTestTrait
 
     public function testGetQueryArray(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'get' => [
                     'test' => [
@@ -65,7 +64,7 @@ trait QueryTestTrait
 
     public function testGetQueryDot(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'get' => [
                     'test' => [
@@ -83,23 +82,30 @@ trait QueryTestTrait
 
     public function testGetQueryFilter(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'globals' => [
                 'get' => [
-                    'test' => 'value',
+                    'test' => '2024-12-31',
                 ],
             ],
         ]);
 
+        $value = $request->getQuery('test', 'date');
+
+        $this->assertInstanceOf(
+            DateTime::class,
+            $value
+        );
+
         $this->assertSame(
-            '',
-            $request->getQuery('test', FILTER_VALIDATE_EMAIL)
+            '2024-12-31T00:00:00.000+00:00',
+            $value->toISOString()
         );
     }
 
     public function testGetQueryInvalid(): void
     {
-        $request = new ServerRequest($this->config);
+        $request = new ServerRequest($this->config, $this->type);
 
         $this->assertNull(
             $request->getQuery('invalid')

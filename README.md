@@ -31,6 +31,7 @@ use Fyre\Server\ServerRequest;
 ```
 
 - `$config` is a [*Config*](https://github.com/elusivecodes/FyreConfig).
+- `$typeParser` is a [*TypeParser*](https://github.com/elusivecodes/FyreTypeParser).
 - `$options` is an array containing configuration options.
     - `method` is a string representing the request method, and will default to the server request method.
     - `body` is a string representing the request body, and will default to the value of `php://input`.
@@ -38,7 +39,7 @@ use Fyre\Server\ServerRequest;
     - `protocolVersion` is a string representing the protocol version, and will default to "*1.1*".
 
 ```php
-$request = new ServerRequest($config, $options);
+$request = new ServerRequest($config, $typeParser, $options);
 ```
 
 Default configuration options will be resolved from the "*App*" key in the [*Config*](https://github.com/elusivecodes/FyreConfig).
@@ -73,11 +74,10 @@ $request = $container->use(ServerRequest::class);
 Get a value from the `$_COOKIE` array.
 
 - `$key` is a string representing the array key using "dot" notation.
-- `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
+- `$as` is a string representing the value type, and will default to *null*.
 
 ```php
-$value = $request->getCookie($key, $filter, $options);
+$value = $request->getCookie($key, $as);
 ```
 
 If the `$key` argument is omitted, this method will return an array containing all values.
@@ -91,11 +91,10 @@ $values = $request->getCookie();
 Get a value from the `$_POST` array or JSON body data.
 
 - `$key` is a string representing the array key using "dot" notation.
-- `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
+- `$as` is a string representing the value type, and will default to *null*.
 
 ```php
-$value = $request->getData($key, $filter, $options);
+$value = $request->getData($key, $as);
 ```
 
 If the `$key` argument is omitted, this method will return an array containing all values.
@@ -117,11 +116,10 @@ $defaultLocale = $request->getDefaultLocale();
 Get a value from the `$_ENV` array.
 
 - `$key` is a string representing the array key.
-- `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
+- `$as` is a string representing the value type, and will default to *null*.
 
 ```php
-$value = $request->getEnv($key, $filter, $options);
+$value = $request->getEnv($key, $as);
 ```
 
 **Get File**
@@ -145,11 +143,10 @@ $files = $request->getFile();
 Get a value from JSON body data.
 
 - `$key` is a string representing the array key using "dot" notation.
-- `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
+- `$as` is a string representing the value type, and will default to *null*.
 
 ```php
-$value = $request->getJson($key, $filter, $options);
+$value = $request->getJson($key, $as);
 ```
 
 If the `$key` argument is omitted, this method will return an array containing all values.
@@ -171,11 +168,10 @@ $locale = $request->getLocale();
 Get a value from the `$_POST` array.
 
 - `$key` is a string representing the array key using "dot" notation.
-- `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
+- `$as` is a string representing the value type, and will default to *null*.
 
 ```php
-$value = $request->getPost($key, $filter, $options);
+$value = $request->getPost($key, $as);
 ```
 
 If the `$key` argument is omitted, this method will return an array containing all values.
@@ -189,11 +185,10 @@ $values = $request->getPost();
 Get a value from the `$_GET` array.
 
 - `$key` is a string representing the array key using "dot" notation.
-- `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
+- `$as` is a string representing the value type, and will default to *null*.
 
 ```php
-$value = $request->getQuery($key, $filter, $options);
+$value = $request->getQuery($key, $as);
 ```
 
 If the `$key` argument is omitted, this method will return an array containing all values.
@@ -207,11 +202,10 @@ $values = $request->getQuery();
 Get a value from the `$_SERVER` array.
 
 - `$key` is a string representing the array key.
-- `$filter` is a number representing the filter to apply, and will default to *FILTER_DEFAULT*.
-- `$options` is a number or array containing flags to use when filtering, and will default to *0*.
+- `$as` is a string representing the value type, and will default to *null*.
 
 ```php
-$value = $request->getServer($key, $filter, $options);
+$value = $request->getServer($key, $as);
 ```
 
 If the `$key` argument is omitted, this method will return an array containing all values.

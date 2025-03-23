@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace Tests\ServerRequest;
 
+use Fyre\DateTime\DateTime;
 use Fyre\Server\ServerRequest;
 
 use function json_encode;
-
-use const FILTER_VALIDATE_EMAIL;
 
 trait JsonTestTrait
 {
     public function testGetJson(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'body' => json_encode([
                 'test' => 'value',
             ]),
@@ -27,7 +26,7 @@ trait JsonTestTrait
 
     public function testGetJsonAll(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'body' => json_encode([
                 'test' => 'value',
             ]),
@@ -43,7 +42,7 @@ trait JsonTestTrait
 
     public function testGetJsonArray(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'body' => json_encode([
                 'test' => [
                     'a' => 'value',
@@ -61,7 +60,7 @@ trait JsonTestTrait
 
     public function testGetJsonDot(): void
     {
-        $request = new ServerRequest($this->config, [
+        $request = new ServerRequest($this->config, $this->type, [
             'body' => json_encode([
                 'test' => [
                     'a' => 'value',
@@ -75,26 +74,33 @@ trait JsonTestTrait
         );
     }
 
-    public function testGetJsonFilter(): void
-    {
-        $request = new ServerRequest($this->config, [
-            'body' => json_encode([
-                'test' => 'value',
-            ]),
-        ]);
-
-        $this->assertSame(
-            '',
-            $request->getJson('test', FILTER_VALIDATE_EMAIL)
-        );
-    }
-
     public function testGetJsonInvalid(): void
     {
-        $request = new ServerRequest($this->config);
+        $request = new ServerRequest($this->config, $this->type);
 
         $this->assertNull(
             $request->getJson('invalid')
+        );
+    }
+
+    public function testGetJsonType(): void
+    {
+        $request = new ServerRequest($this->config, $this->type, [
+            'body' => json_encode([
+                'test' => '2024-12-31',
+            ]),
+        ]);
+
+        $value = $request->getJson('test', 'date');
+
+        $this->assertInstanceOf(
+            DateTime::class,
+            $value
+        );
+
+        $this->assertSame(
+            '2024-12-31T00:00:00.000+00:00',
+            $value->toISOString()
         );
     }
 }
