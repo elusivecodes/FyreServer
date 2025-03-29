@@ -160,7 +160,7 @@ class ServerRequest extends Request
             return $value;
         }
 
-        return $this->parseType($value, $as);
+        return $this->typeParser->use($as)->parse($value);
     }
 
     /**
@@ -424,7 +424,7 @@ class ServerRequest extends Request
             return $value;
         }
 
-        return $this->parseType($value, $as);
+        return $this->typeParser->use($as)->parse($value);
     }
 
     /**
@@ -469,25 +469,6 @@ class ServerRequest extends Request
         }
 
         $this->globals[$type] = $data;
-    }
-
-    /**
-     * Parse a value.
-     *
-     * @param mixed $value The value to parse.
-     * @param string $type The type.
-     * @return mixed The parsed value.
-     */
-    protected function parseType(mixed $value, string $type): mixed
-    {
-        if (is_array($value)) {
-            return array_map(
-                fn(mixed $val): mixed => $this->parseType($val, $type),
-                $value
-            );
-        }
-
-        return $this->typeParser->use($type)->parse($value);
     }
 
     /**
