@@ -458,9 +458,6 @@ class ServerRequest extends Request
             case 'post':
                 $data ??= $_POST;
                 break;
-            case 'request':
-                $data ??= $_REQUEST;
-                break;
             case 'server':
                 $data ??= $_SERVER;
                 break;
