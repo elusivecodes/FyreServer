@@ -38,7 +38,6 @@ class ClientResponse extends Response
     {
         $options['headers'] ??= [];
         $options['headers']['Content-Type'] ??= 'text/html; charset=UTF-8';
-        $options['headers']['Cache-Control'] ??= ['no-store', 'max-age=0', 'no-cache'];
 
         parent::__construct($options);
     }
@@ -112,7 +111,7 @@ class ClientResponse extends Response
         header('HTTP/'.$this->protocolVersion.' '.$this->statusCode.' '.$this->getReason());
 
         foreach ($this->headers as $header) {
-            header((string) $header, false);
+            header((string) $header);
         }
 
         foreach ($this->cookies as $cookie) {

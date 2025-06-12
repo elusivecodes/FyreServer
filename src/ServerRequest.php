@@ -50,8 +50,6 @@ class ServerRequest extends Request
 
     protected array $supportedLocales = [];
 
-    protected TypeParser $typeParser;
-
     protected UserAgent $userAgent;
 
     /**
@@ -61,15 +59,16 @@ class ServerRequest extends Request
      * @param TypeParser $typeParser The TypeParser.
      * @param array $options The request options.
      */
-    public function __construct(Config $config, TypeParser $typeParser, array $options = [])
-    {
+    public function __construct(
+        Config $config,
+        protected TypeParser $typeParser,
+        array $options = []
+    ) {
         $options['globals'] ??= [];
         $options['globals']['server'] ??= null;
 
         $this->defaultLocale = $config->get('App.defaultLocale') ?? locale_get_default();
         $this->supportedLocales = $config->get('App.supportedLocales', []);
-
-        $this->typeParser = $typeParser;
 
         foreach ($options['globals'] as $type => $data) {
             $this->loadGlobals($type, $data);

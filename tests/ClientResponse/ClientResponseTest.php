@@ -19,11 +19,16 @@ final class ClientResponseTest extends TestCase
 
     public function testNoCache(): void
     {
-        $response = new ClientResponse();
+        $response1 = new ClientResponse();
+        $response2 = $response1->noCache();
+
+        $this->assertNull(
+            $response1->getHeaderValue('Cache-Control')
+        );
 
         $this->assertSame(
             'no-store, max-age=0, no-cache',
-            $response->getHeaderValue('Cache-Control')
+            $response2->getHeaderValue('Cache-Control')
         );
     }
 
