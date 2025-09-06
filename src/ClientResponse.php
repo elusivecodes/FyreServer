@@ -7,6 +7,7 @@ use DateTimeInterface;
 use Fyre\DateTime\DateTime;
 use Fyre\Http\Cookie;
 use Fyre\Http\Response;
+use Fyre\Utility\Traits\MacroTrait;
 use SimpleXMLElement;
 
 use function array_key_exists;
@@ -25,6 +26,8 @@ use const JSON_PRETTY_PRINT;
  */
 class ClientResponse extends Response
 {
+    use MacroTrait;
+
     protected const HEADER_FORMAT = 'D, d-M-Y H:i:s e';
 
     protected array $cookies = [];

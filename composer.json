@@ -23,6 +23,7 @@
         "fyre/config": "^4.1",
         "fyre/cookie": "^4.0",
         "fyre/filesystem": "^2.0",
+        "fyre/macro": "^1.0",
         "fyre/negotiate": "^2.0",
         "fyre/request": "^3.0",
         "fyre/response": "^3.0",

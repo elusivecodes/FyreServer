@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace Tests\ClientResponse;
 
 use Fyre\Server\ClientResponse;
+use Fyre\Utility\Traits\MacroTrait;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
+use function class_uses;
 use function json_decode;
 
 final class ClientResponseTest extends TestCase
@@ -16,6 +18,14 @@ final class ClientResponseTest extends TestCase
     use DateTestTrait;
 
     protected ClientResponse $response;
+
+    public function testMacroable(): void
+    {
+        $this->assertContains(
+            MacroTrait::class,
+            class_uses(ClientResponse::class)
+        );
+    }
 
     public function testNoCache(): void
     {

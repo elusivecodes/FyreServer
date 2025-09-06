@@ -8,7 +8,10 @@ use Fyre\Container\Container;
 use Fyre\DB\TypeParser;
 use Fyre\Http\Request;
 use Fyre\Server\ServerRequest;
+use Fyre\Utility\Traits\MacroTrait;
 use PHPUnit\Framework\TestCase;
+
+use function class_uses;
 
 final class ServerRequestTest extends TestCase
 {
@@ -113,6 +116,14 @@ final class ServerRequestTest extends TestCase
 
         $this->assertTrue(
             $request->isSecure()
+        );
+    }
+
+    public function testMacroable(): void
+    {
+        $this->assertContains(
+            MacroTrait::class,
+            class_uses(ServerRequest::class)
         );
     }
 

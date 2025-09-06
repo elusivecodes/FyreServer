@@ -10,6 +10,7 @@ use Fyre\Http\Request;
 use Fyre\Http\Uri;
 use Fyre\Http\UserAgent;
 use Fyre\Server\Exceptions\ServerException;
+use Fyre\Utility\Traits\MacroTrait;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 
@@ -40,6 +41,8 @@ use const PHP_URL_PATH;
  */
 class ServerRequest extends Request
 {
+    use MacroTrait;
+
     protected string $defaultLocale;
 
     protected array $globals = [];
